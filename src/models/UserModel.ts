@@ -1,3 +1,5 @@
+import RoleModel from "./RoleModel";
+
 class UserModel {
    id?: any; // id nguoi dung
    idUser: number; // id nguoi dung

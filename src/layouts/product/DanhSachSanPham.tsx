@@ -78,7 +78,7 @@ function DanhSachSanPham({ tuKhoaTimKiem, idGenre }: DanhSachSanPhamProps) {
         return (
             <div className="container">
                 <div className="d-flex align-items-center justify-content-center">
-                    <h1>Hiện không tìm thấy sách theo yêu cầu!</h1>
+                    <h1>Hiện không tìm thấy sản (home) phẩm theo yêu cầu!</h1>
                 </div>
             </div>
         );
@@ -90,7 +90,7 @@ function DanhSachSanPham({ tuKhoaTimKiem, idGenre }: DanhSachSanPhamProps) {
             <div className="row mt-4 mb-4">
                 {
                     danhSachQuyenSach.map((item) => (
-                           <PlasticProps plasticItem={item} key={item.idPlasticItem} />
+                           <PlasticProps plastic={item} key={item.idPlasticItem} />
                         )
                     )
                 }

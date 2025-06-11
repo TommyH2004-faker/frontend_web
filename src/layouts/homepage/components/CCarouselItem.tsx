@@ -1,7 +1,8 @@
 import React, {useEffect, useState} from "react";
 import PlasticModels from "../../../models/PlasticModels";
 import ImageModel from "../../../models/ImageModel";
-import {lay1AnhCuaMotSach} from "../../../api/ImageApi";
+import {lay1AnhCuaMotNhua} from "../../../api/ImageApi";
+
 
 interface CCarouselItemProps {
     doNhua1:PlasticModels;
@@ -12,7 +13,7 @@ const CCarouselItem: React.FC<CCarouselItemProps> = (props) => {
     const [dangTaiDuLieu, setDangTaiDuLieu] = useState(true);
     const [baoLoi, setBaoLoi] = useState<string | null>(null);
     useEffect(() => {
-    lay1AnhCuaMotSach(maNhua).then(
+    lay1AnhCuaMotNhua(maNhua).then(
     (hinhAnhData: ImageModel[]) => {
         setDanhSachAnh(hinhAnhData);
         setDangTaiDuLieu(false);

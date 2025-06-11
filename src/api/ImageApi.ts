@@ -19,12 +19,12 @@ async function  layAnhMotSach(duongDan: string): Promise<ImageModel[]> {
     }
     return ketQua;
 }
-export async function lay1AnhCuaMotSach(idPlasticItem:number): Promise<ImageModel[]> {
+export async function lay1AnhCuaMotNhua(idPlasticItem:number): Promise<ImageModel[]> {
     // xac dinh endpoint
     const duongDan: string = `http://localhost:8080/plastic-items/${idPlasticItem}/listImages?sort=idImage,asc?page=0&size=1`;
     return layAnhMotSach(duongDan);
 }
-export async function layToanBoHinhAnhMotSach(idPlasticItem: number): Promise<ImageModel[]> {
+export async function layToanBoHinhAnhMotNhua(idPlasticItem: number): Promise<ImageModel[]> {
     // xac dinh endpoint
     const duongDan: string = `http://localhost:8080/plastic-items/${idPlasticItem}/listImages`;
     return layAnhMotSach(duongDan);

@@ -4,13 +4,13 @@ class CartItemModel {
    id?: number;
    idCart?: any; // id san pham trong gio hang
    quantity: number; // so luong
-   pllastic:PlasticModels[]// do nhua
+   plasticItem:PlasticModels;// do nhua
    idUser?: number; // id nguoi dung
    review?: boolean; // da review chua
 
-   constructor(quantity: number,pllastic:PlasticModels[]) {
+   constructor(quantity: number, plasticItem: PlasticModels) {
       this.quantity = quantity;
-        this.pllastic = pllastic;
+      this.plasticItem = plasticItem;
    }
 }
 
