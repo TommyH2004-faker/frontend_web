@@ -5,6 +5,7 @@ import PlasticCard from "../product/componetns/PlasticProps";
 import PlasticList from "../product/PlasticList";
 import DanhSachSanPham from "../product/DanhSachSanPham";
 import {useParams} from "react-router-dom";
+import BannerCarousel from "../header-footer/BannerCarousel";
 interface HomePageProps {
     tuKhoaTimKiem: string;
 
@@ -23,9 +24,14 @@ try {
 if (Number.isNaN(idGenreNumber)) {
     idGenreNumber = 0;
 }
+    const images = [
+        "/images/Plastics/banner1.jpg",
+        "/images/Plastics/banner2.jpg",
+        "/images/Plastics/banner3.jpg",
+    ];
     return (
         <div>
-            <Banner/>
+            <BannerCarousel images={images}/>
             <Carousel/>
             <DanhSachSanPham tuKhoaTimKiem={tuKhoaTimKiem} idGenre={idGenreNumber}/>
         </div>

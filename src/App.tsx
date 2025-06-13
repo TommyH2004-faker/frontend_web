@@ -17,49 +17,99 @@ import CartPage from "./page/CartPage";
 import {FeedbackCustomerPage} from "./page/components/FeedbackCustomerPage";
 import ChinhSach from "./page/ChinhSach";
 import FavoriteBooksList from "./layouts/product/FavoritePlasticList";
-import FavoritePlasticsList from "./layouts/product/FavoritePlasticList";
 import About from "./layouts/About/About";
 import {ConfirmProvider} from "material-ui-confirm";
 import ProfilePage from "./page/ProfilePage";
+import {Error403Page} from "./page/components/403Page";
+import {Slidebar} from "./layouts/Admin/component/Slidebar";
+import DashboardPage from "./layouts/Admin/Dashboard";
+import PlasticManagement from "./layouts/Admin/PlasticManagement";
+import UserManagementPage from "./layouts/Admin/UserManagement";
+import GenreManagementPage from "./layouts/Admin/GenreManagement";
+import OrderManagementPage from "./layouts/Admin/OrderManagement";
+import FeedbackPage from "./layouts/Admin/FeedbackManagement";
+import {Error404Page} from "./page/components/404Page";
+import Banner from "./layouts/homepage/components/Banner";
+import BannerCarousel from "./layouts/header-footer/BannerCarousel";
 
 const MyRoutes = () => {
     const [tuKhoaTimKiem, setTuKhoaTimKiem] = useState('');
     const [reloadAvatar, setReloadAvatar] = useState(0);
     const location = useLocation();
     const isAdminPath = location.pathname.startsWith("/admin");
+
     return (
         <AuthProvider>
-            <CartItemProvider>  {/* Thêm CartItemProvider ở đây */}
+            <CartItemProvider>
                 <ConfirmProvider>
-                <>
-                    <Navbar tuKhoaTimKiem={tuKhoaTimKiem} setTuKhoaTimKiem={setTuKhoaTimKiem} />
+                    {/* Hiển thị Navbar và Footer cho trang khách hàng */}
+                    {!isAdminPath && (
+                        <>
+                            <Navbar
+                                key={reloadAvatar}
+                                tuKhoaTimKiem={tuKhoaTimKiem}
+                                setTuKhoaTimKiem={setTuKhoaTimKiem}
+                            />
+                            
+                        </>
+                    )}
+                    {/* Customer Routes */}
+                    {!isAdminPath && (
+                        <Routes>
+                            <Route path='/' element={<HomePage tuKhoaTimKiem={tuKhoaTimKiem} />} />
+                            <Route path='/:idGenre' element={<HomePage tuKhoaTimKiem={tuKhoaTimKiem} />} />
+                            <Route path='/about' element={<About/>} />
+                            <Route path='/dangky' element={<DangKyNguoiDung />} />
+                            <Route path='/active-account/:email/:activationCode' element={<KichHoatTaiKhoan />} />
+                            <Route path='plastic-items/:idPlastic' element={<ChiTietNhua />} />
+                            <Route path='/search/:idGenreParam' element={<FilterPage />} />
+                            <Route path='/search' element={<FilterPage />} />
+                            <Route path='/my-favorite-books' element={<FavoriteBooksList />} />
+                            <Route path='/dangnhap' element={<DangNhap />} />
+                            <Route path='/policy' element={<ChinhSach />} />
+                            <Route path='/cart' element={<CartPage />} />
+                            <Route path='/feedback' element={<FeedbackCustomerPage />} />
+                            <Route path='/forgot-password' element={<ForgotPassword />} />
+                            <Route path='/profile' element={<ProfilePage setReloadAvatar={setReloadAvatar} />} />
 
-                    <Routes>
-                        <Route path='/' element={<HomePage tuKhoaTimKiem={tuKhoaTimKiem} />} />
-                        <Route path='/plastic-items/:idPlastic' element={<ChiTietNhua />} />
-                        <Route path='/genre/:idGenreParam' element={<HomePage tuKhoaTimKiem={tuKhoaTimKiem} />} />
-                        <Route path='/search/:idGenreParam' element={<FilterPage />} />
-                        <Route path='/search' element={<FilterPage />} />
-                        <Route path='/about' element={<About />} />
-                        <Route path='/dangnhap' element={<DangNhap/>} />
-                        <Route path='/forgot-password' element={<ForgotPassword />} />
-                        <Route path='/dangky' element={<DangKyNguoiDung />} />
-                        <Route path='/cart' element={<CartPage />} />
-                        <Route path='/active-account/:email/:activationCode' element={<KichHoatTaiKhoan />} />
-                        <Route path='/feedback' element={<FeedbackCustomerPage/>} />
-                        <Route path='policy' element={<ChinhSach />} />
-                        <Route path='my-favorite-books' element={<FavoritePlasticsList/>}/>
-                        <Route path='/profile' element={<ProfilePage setReloadAvatar={setReloadAvatar} />} />
-                    </Routes>
+                            {/* Nếu không tìm thấy trang */}
+                            <Route path='*' element={<Error403Page />} />
+                        </Routes>
+                    )}
 
-                    <Footer />
-                </>
-                <ToastContainer position='bottom-center' autoClose={3000} pauseOnFocusLoss={false} />
+                    {/* Hiển thị Footer cho trang khách hàng */}
+                    {!isAdminPath && <Footer />}
+
+                    {/* Admin Routes */}
+                    {isAdminPath && (
+                        <div className='row overflow-hidden w-100'>
+                            <div className='col-2 col-md-3 col-lg-2'>
+                                <Slidebar/>
+                            </div>
+                            <div className='col-10 col-md-9 col-lg-10'>
+                                <Routes>
+                                    <Route path='/admin/dashboard' element={<DashboardPage/>}/>
+                                    <Route path='/admin/book' element={<PlasticManagement/>}/>
+                                    <Route path='/admin/user' element={<UserManagementPage/>}/>
+                                    <Route path='/admin/genre' element={<GenreManagementPage/>}/>
+                                    <Route path='/admin/order' element={<OrderManagementPage/>}/>
+                                    <Route path='/admin/feedback' element={<FeedbackPage/>}/>
+
+                                    {/* Bắt lỗi 404 cho trang Admin */}
+                                    <Route path='/admin/*' element={<Error404Page/>}/>
+                                </Routes>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Toast thông báo */}
+                    <ToastContainer position='bottom-center' autoClose={3000} pauseOnFocusLoss={false} />
                 </ConfirmProvider>
             </CartItemProvider>
         </AuthProvider>
     );
 };
+
 
 function App() {
     return (

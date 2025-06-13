@@ -51,8 +51,87 @@ const PlasticProps: React.FC<PlasticPropsInterface> = ({ plastic}) => {
                 });
         }
     }, [maNhua]);
-
     const handleAddProduct = async (newPlastic: PlasticModels) => {
+        let isExistPlastic = cartList.find(cartItem =>
+            cartItem.plasticItem && cartItem.plasticItem.idPlasticItem === newPlastic.idPlasticItem
+        );
+
+        if (isExistPlastic) {
+            isExistPlastic.quantity += 1;
+
+            if (isToken()) {
+                const request = {
+                    idCart: isExistPlastic.idCart,
+                    quantity: isExistPlastic.quantity,
+                };
+                const token = localStorage.getItem("token");
+                fetch(endpointBE + `/cart-item/update-item`, {
+                    method: "PUT",
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        "content-type": "application/json",
+                    },
+                    body: JSON.stringify(request),
+                }).catch((err) => console.log(err));
+            }
+        } else {
+            if (isToken()) {
+                try {
+                    // Xóa thuộc tính thumbnail nếu nó là undefined
+                    const cleanedPlastic = { ...newPlastic };
+                    if (cleanedPlastic.thumbnail === undefined) {
+                        delete cleanedPlastic.thumbnail;
+                    }
+
+                    const request = [
+                        {
+                            quantity: 1,
+                            plastic: cleanedPlastic,
+                            idUser: getIdUserByToken(),
+                        },
+                    ];
+
+                    console.log("Dữ liệu gửi lên: ", request);
+
+                    const token = localStorage.getItem("token");
+                    const response = await fetch(endpointBE + "/cart-item/add-item", {
+                        method: "POST",
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                            "content-type": "application/json",
+                        },
+                        body: JSON.stringify(request),
+                    });
+
+                    console.log("Response: ", response);
+
+                    if (response.ok) {
+                        const idCart = await response.json();
+                        cartList.push({
+                            idCart: idCart,
+                            quantity: 1,
+                            plasticItem: newPlastic,
+                        });
+                    } else {
+                        const errorMessage = await response.text();
+                        console.error("Lỗi phản hồi server: ", errorMessage);
+                    }
+                } catch (error) {
+                    console.log(error);
+                }
+            } else {
+                cartList.push({
+                    quantity: 1,
+                    plasticItem: newPlastic,
+                });
+            }
+        }
+
+        localStorage.setItem("cart", JSON.stringify(cartList));
+        toast.success("Thêm vào giỏ hàng thành công");
+        setTotalCart(cartList.length);
+    };
+   /* const handleAddProduct = async (newPlastic: PlasticModels) => {
         let isExistBook = cartList.find(cartItem =>
             cartItem.plasticItem?.idPlasticItem === newPlastic.idPlasticItem
         );
@@ -78,14 +157,19 @@ const PlasticProps: React.FC<PlasticPropsInterface> = ({ plastic}) => {
         } else {
             if (isToken()) {
                 try {
-                    const request = [
+                    /!*const request =
                         {
                             quantity: 1,
                             plasticItem: newPlastic,
                             idUser: getIdUserByToken(),
-                        },
-                    ];
-
+                        }*!/
+                    const request =[
+                        {
+                        quantity: 1,
+                        plasticItem: newPlastic,
+                        idUser: getIdUserByToken(),
+                    },
+                ]
 
 
                     const token = localStorage.getItem("token");
@@ -97,7 +181,8 @@ const PlasticProps: React.FC<PlasticPropsInterface> = ({ plastic}) => {
                         },
                         body: JSON.stringify(request),
                     });
-
+                    // ✅ Kiểm tra phản hồi từ server
+                    console.log("Du lieu gửi đi:", request);
                     if (response.ok) {
                         const idCart = await response.json();
                         cartList.push({
@@ -112,7 +197,6 @@ const PlasticProps: React.FC<PlasticPropsInterface> = ({ plastic}) => {
             } else {
                 // 🟢 Trường hợp không đăng nhập: vẫn đảm bảo đúng cấu trúc
                 cartList.push({
-                    idCart: null,
                     quantity: 1,
                     plasticItem: newPlastic,
                 });
@@ -122,7 +206,7 @@ const PlasticProps: React.FC<PlasticPropsInterface> = ({ plastic}) => {
         localStorage.setItem("cart", JSON.stringify(cartList));
         toast.success("Thêm vào giỏ hàng thành công");
         setTotalCart(cartList.length);
-    };
+    };*/
 
 
     /*const handleFavoritPlastic = async () => {
@@ -214,43 +298,49 @@ const PlasticProps: React.FC<PlasticPropsInterface> = ({ plastic}) => {
 
     return (
         <div className="col-md-3 mt-2">
-            <div className="card" style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+            <div className="card shadow-sm h-100 d-flex flex-column">
                 <Link to={`/plastic-items/${plastic.idPlasticItem}`}>
                     <img
                         src={duLieuAnh}
                         className="card-img-top"
-                        alt={plastic.namePlasticItem}
-                        style={{ height: "250px", objectFit: "cover", borderRadius: "10px" }}
+                        style={{
+                            height: "200px",
+                            objectFit: "cover",
+                            borderTopLeftRadius: "10px",
+                            borderTopRightRadius: "10px"
+                        }}
                     />
                 </Link>
-                <div className="card-body" style={{ flexGrow: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
-                    <Link to={`/plastic-items/${plastic.idPlasticItem}`} style={{textDecoration: 'none'}}>
-                        <h5 className="card-title" style={{minHeight: "50px", textAlign: "center"}}>
+
+                <div className="card-body d-flex flex-column justify-content-between">
+                    <Link to={`/plastic-items/${plastic.idPlasticItem}`} style={{ textDecoration: "none", color: "inherit" }}>
+                        <h5 className="card-title text-center" style={{ minHeight: "48px" }}>
                             {plastic.namePlasticItem}
                         </h5>
-                        <h6 className="card-title" style={{minHeight: "50px", textAlign: "center"}}>
+                        <h6 className="card-subtitle text-muted text-center mb-2" style={{ minHeight: "24px" }}>
                             {plastic.manufacturer}
                         </h6>
                     </Link>
 
-                    <div className="price row" style={{minHeight: "40px"}}>
-                        <span className="original-price col-6 text-end">
-                            <del>{dinhDangSo(plastic.listPrice)}</del>
-                        </span>
-                        <span className="discounted-price col-6 text-end">
-                            <strong>{dinhDangSo(plastic.sellPrice)} đ</strong>
-                        </span>
+                    <div className="d-flex justify-content-between align-items-center mb-2">
+                    <span className="text-muted">
+                        <del>{dinhDangSo(plastic.listPrice)} đ</del>
+                    </span>
+                        <span className="text-danger fw-bold">
+                        {dinhDangSo(plastic.sellPrice)} đ
+                    </span>
                     </div>
 
-                    <div className="row mt-2" role="group">
-                        <div className="col-6">
-                            {renderRating(plastic.avgRating || 0)}
-                        </div>
-                        <div className="col-6 text-end">
-                            <button className="btn btn-secondary btn-block me-2" onClick={handleFavoritPlastic}>
-                                <i className={`fas fa-heart ${isFavoriteBook ? "text-danger" : ""}`}></i>
+                    <div className="d-flex justify-content-between align-items-center mt-auto">
+                        <div>{renderRating(plastic.avgRating || 0)}</div>
+                        <div className="d-flex gap-2">
+                            <button
+                                className={`btn btn-sm ${isFavoriteBook ? "btn-danger" : "btn-outline-secondary"}`}
+                                onClick={handleFavoritPlastic}
+                            >
+                                <i className={`fas fa-heart ${isFavoriteBook ? "" : "text-muted"}`}></i>
                             </button>
-                            <button className="btn btn-danger btn-block" onClick={() => handleAddProduct(plastic)}>
+                            <button className="btn btn-sm btn-success" onClick={() => handleAddProduct(plastic)}>
                                 <i className="fas fa-shopping-cart"></i>
                             </button>
                         </div>
@@ -259,6 +349,7 @@ const PlasticProps: React.FC<PlasticPropsInterface> = ({ plastic}) => {
             </div>
         </div>
     );
+
 };
 
 export default PlasticProps;

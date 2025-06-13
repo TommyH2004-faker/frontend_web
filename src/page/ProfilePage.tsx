@@ -211,7 +211,7 @@ const ProfilePage: React.FC<ProfilePageProps> = (props) => {
 	}
 
 	// Xử lý khi thay đổi avatar (thay đổi avatar)
-	function handleSubmitAvatar() {
+	/*function handleSubmitAvatar() {
 		const token = localStorage.getItem("token");
 		toast.promise(
 			fetch(endpointBE + "/taikhoan/change-avatar", {
@@ -244,6 +244,52 @@ const ProfilePage: React.FC<ProfilePageProps> = (props) => {
 					setPreviewAvatar(user.avatar);
 					setIsUploadAvatar(false);
 					console.log(error);
+				}),
+			{ pending: "Đang trong quá trình xử lý ..." }
+		);
+	}*/
+	function handleSubmitAvatar() {
+		const token = localStorage.getItem("token");
+
+		toast.promise(
+			fetch(endpointBE + "/taikhoan/change-avatar", {
+				method: "PUT",
+				headers: {
+					Authorization: `Bearer ${token}`,
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify({
+					idUser: getIdUserByToken(),
+					avatar: dataAvatar,
+				}),
+			})
+				.then(async (response) => {
+					const data = await response.json();
+
+					// ✅ Log response từ backend
+					console.log("Phản hồi từ backend khi đổi avatar:", data);
+
+					// ✅ Kiểm tra token hợp lệ
+					const jwtToken = data.jwtToken;
+					if (jwtToken && jwtToken.split(".").length === 3) {
+						localStorage.setItem("token", jwtToken);
+						console.log("Token mới đã được cập nhật vào localStorage.");
+					} else {
+						console.warn("Không nhận được token hợp lệ từ backend.");
+					}
+
+					toast.success("Cập nhật ảnh đại diện thành công");
+					setPreviewAvatar(previewAvatar);
+					setIsUploadAvatar(false);
+					props.setReloadAvatar(Math.random());
+
+					return data;
+				})
+				.catch((error) => {
+					console.error("Lỗi khi cập nhật avatar:", error);
+					toast.error("Cập nhật ảnh đại diện thất bại");
+					setPreviewAvatar(user.avatar);
+					setIsUploadAvatar(false);
 				}),
 			{ pending: "Đang trong quá trình xử lý ..." }
 		);
@@ -294,12 +340,10 @@ const ProfilePage: React.FC<ProfilePageProps> = (props) => {
 	return (
 		<div className='container my-5'>
 			<Grid container>
-				<Grid
-					item
-					sm={12}
-					md={12}
-					lg={3}
-				>
+				<Grid item
+					  sm={12}
+					  md={12}
+					  lg={3}>
 					<div className='bg-light rounded py-3 me-lg-2 me-md-0 me-sm-0'>
 						<div className='d-flex align-items-center justify-content-center flex-column'>
 							<Avatar

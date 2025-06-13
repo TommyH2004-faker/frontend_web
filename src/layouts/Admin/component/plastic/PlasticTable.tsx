@@ -10,7 +10,7 @@ import { useConfirm } from "material-ui-confirm";
 import {endpointBE} from "../../../utils/Constant";
 import {DataTable} from "../../../utils/DataTable";
 import PlasticModels from "../../../../models/PlasticModels";
-import {getAllPlasticItems} from "../../../../api/PlasticApi";
+import {getAllPlasticItems, layToanBoDoNhua} from "../../../../api/PlasticApi";
 import {layToanBoHinhAnhMotNhua} from "../../../../api/ImageApi";
 
 
@@ -34,7 +34,7 @@ export const PlasticTable: React.FC<PlasticTableProps> = (props) => {
 	useEffect(() => {
 		const fetchData = async () => {
 			try {
-				const plasticResponse = await getAllPlasticItems(1000,0);
+				const plasticResponse = await getAllPlasticItems(0,1000);
 
 				const promises = plasticResponse.ketQua.map(async (plastic) => {
 					const imagesList = await layToanBoHinhAnhMotNhua(plastic.idPlasticItem);
@@ -102,7 +102,7 @@ export const PlasticTable: React.FC<PlasticTableProps> = (props) => {
 				return <img src={params.value} alt='' width={70} />;
 			},
 		},
-		{ field: "namePlastic", headerName: "TÊN SẢN PHẨM", width: 350 },
+		{ field: "namePlasticItem", headerName: "TÊN SẢN PHẨM", width: 350 },
 		{ field: "quantity", headerName: "SỐ LƯỢNG", width: 100 },
 		{
 			field: "sellPrice",
@@ -116,7 +116,7 @@ export const PlasticTable: React.FC<PlasticTableProps> = (props) => {
 				);
 			},
 		},
-		{ field: "manufor", headerName: "Nhà sản xuất", width: 150 },
+		{ field: "manufacturer", headerName: "Nhà sản xuất", width: 150 },
 
 		{
 			field: "action",

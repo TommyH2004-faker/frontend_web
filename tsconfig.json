@@ -1,6 +1,8 @@
 {
   "compilerOptions": {
-    "target": "es5",
+    "target": "es2015",
+    "downlevelIteration": true,
+/*    "target": "es5",*/
     "strictFunctionTypes": false,
     "lib": [
       "dom",

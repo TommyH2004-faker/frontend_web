@@ -14,16 +14,33 @@ export const DataTable: React.FC<DataTableProps> = (props) => {
 				height: props.rows.length > 0 ? "auto" : "200px",
 			}}
 		>
+			{/*<DataGrid
+				rows={props.rows}
+				columns={props.columns}
+				pageSize={10}
+				rowsPerPageOptions={[10, 15, 20, 30]}
+				pagination
+				initialState={{
+					pagination: {
+						"pageSize": 10,
+					},
+				}}
+			/>*/}
 			<DataGrid
 				rows={props.rows}
 				columns={props.columns}
+				pageSizeOptions={[10, 15, 20, 30]}
+				pagination
 				initialState={{
 					pagination: {
-						paginationModel: { page: 0, pageSize: 10 },
+						paginationModel: {
+							pageSize: 10,
+							page: 0, // optional, defaults to 0
+						},
 					},
 				}}
-				pageSizeOptions={[10, 15, 20, 30]}
 			/>
+
 		</div>
 	);
 };

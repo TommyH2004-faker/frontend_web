@@ -1,5 +1,5 @@
 import PlasticModels from "../models/PlasticModels";
-import {my_request} from "./Request";
+import {my_request, requestAdmin} from "./Request";
 import {endpointBE} from "../layouts/utils/Constant";
 import {layToanBoHinhAnhMotNhua} from "./ImageApi";
 import plasticList from "../layouts/product/PlasticList";
@@ -267,7 +267,7 @@ export  async function get3BestSeller():Promise<PlasticModels[]>{
 
     let newPlastic =await Promise.all(plasticList.ketQua.map(async (plastics:any)=>{
         const plasticItem = await layToanBoHinhAnhMotNhua(plastics.idPlasticItem);
-        const thumbnail = plasticItem.filter(image => image.thumbnail);
+        const thumbnail = plasticItem.filter(image => image.urlImage);
         return {
             ...plastics,
             thumbnail: thumbnail[0].urlImage
@@ -330,4 +330,19 @@ export async function getPlasticByIdAllInformation(idPlastic: number): Promise<P
         console.error('Error: ', error);
         return null;
     }
+}
+export async function getTotalOfPlastic():Promise<number>{
+    const endpoint = "http://localhost:8080/plastic/get-total";
+    try {
+        // Gọi phương thức request()
+        const response = await requestAdmin(endpoint);
+        // Kiểm tra xem dữ liệu endpoint trả về có dữ liệu không
+        if (response) {
+            // Trả về số lượng cuốn sách
+            return response;
+        }
+    } catch (error) {
+        throw new Error("Lỗi không gọi được endpoint lấy tổng cuốn sách\n" + error);
+    }
+    return 0;
 }

@@ -11,41 +11,57 @@ export async function getTotalNumberOfFeedbacks(): Promise<number> {
     const response = await my_request(duongDan);
     return response;
 }
-
+async function fetchUserName(userLink: string): Promise<string> {
+    try {
+        const response = await fetch(userLink);
+        if (!response.ok) throw new Error("User fetch failed");
+        const userData = await response.json();
+        return `${userData.lastName} ${userData.firstName}`;
+    } catch (error) {
+        console.error("Lỗi khi lấy user:", error);
+        return "Ẩn danh";
+    }
+}
 // getAllFeedbacks
-export async function getAllFeedback(): Promise<FeedbackModel[]> {
-    const endpoint = endpointBE + "/feedback/feedbacks?sort=idFeedback,desc";
+/*export async function getAllFeedback(): Promise<FeedbackModel[]> {
+    const endpoint = endpointBE + "/feedbacks?sort=idFeedback,desc";
+
+
     const response = await requestAdmin(endpoint);
 
     let feedbacks: FeedbackModel[] = [];
 
-    // Kiểm tra nếu có dữ liệu trả về
-    if (response && response.length > 0) {
-        feedbacks = response.map((feedbackData: any) => {
-            return {
-                idFeedback: feedbackData.idFeedback,
-                title: feedbackData.title,
-                comment: feedbackData.comment,
-                dateCreated: feedbackData.dateCreated,
-                isReaded: feedbackData.isReaded,
-                idUser: feedbackData.idUser,
-                user: feedbackData.user ? {
-                    idUser: feedbackData.user.idUser,
-                    firstName: feedbackData.user.firstName,
-                    lastName: feedbackData.user.lastName,
-                    username: feedbackData.user.username,
-                    email: feedbackData.user.email,
-                    phoneNumber: feedbackData.user.phoneNumber,
-                    avatar: feedbackData.user.avatar,
-                    gender: feedbackData.user.gender
-                } : null // Nếu không có dữ liệu user, gán null
-            };
-        });
+    if (response) {
+        feedbacks = await response._embedded.feedbackses.map((feedbackData: any) => ({
+            ...feedbackData
+        }))
+    }
+
+    return feedbacks;
+}*/
+export async function getAllFeedback(): Promise<FeedbackModel[]> {
+    const endpoint = `${endpointBE}/feedbacks?sort=idFeedback,desc`;
+    const response = await requestAdmin(endpoint);
+
+    let feedbacks: FeedbackModel[] = [];
+
+    if (response && response._embedded && response._embedded.feedbackses) {
+        const feedbackRawList = response._embedded.feedbackses;
+
+        feedbacks = await Promise.all(
+            feedbackRawList.map(async (feedbackData: any) => {
+                const fullName = await fetchUserName(feedbackData._links.user.href);
+                return {
+                    ...feedbackData,
+                    id: feedbackData.idFeedback,
+                    user: fullName // 👈 Thêm tên người dùng vào đây
+                };
+            })
+        );
     }
 
     return feedbacks;
 }
-
 // Lay danh gia mot sach
 async function layDanhGiaCuaMotSach(duongDan: string): Promise<ReviewModel[]> {
     const ketQua: ReviewModel[] = [];

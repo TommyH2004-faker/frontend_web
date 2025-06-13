@@ -2,6 +2,7 @@ import React, {useEffect, useState} from "react";
 import PlasticModels from "../../../models/PlasticModels";
 import {get3DoNhuaMoiNhat} from "../../../api/PlasticApi";
 import CCarouselItem from "./CCarouselItem";
+import {Link} from "react-router-dom";
 const Carousel: React.FC = () => {
   const [danhsachDoNhua, setDanhSachDoNhua] = useState<PlasticModels[]>([]);
     const [dangTaiDuLieu, setDangTaiDuLieu] = useState(true);
@@ -38,13 +39,20 @@ const Carousel: React.FC = () => {
         <div id="carouselExampleDark" className="carousel carousel-dark slide">
           <div className="carousel-inner">
             <div className="carousel-item active" data-bs-interval="10000">
-              <CCarouselItem doNhua1={danhsachDoNhua[0]} />
+              <Link to={`/plastic-items/${danhsachDoNhua[0].idPlasticItem}`}>
+                <CCarouselItem doNhua1={danhsachDoNhua[0]} />
+                </Link>
             </div>
             <div className="carousel-item " data-bs-interval="10000">
-                <CCarouselItem doNhua1={danhsachDoNhua[1]} />
+                <Link to={`/plastic-items/${danhsachDoNhua[1].idPlasticItem}`}>
+                    <CCarouselItem doNhua1={danhsachDoNhua[1]} />
+                </Link>
+
             </div>
             <div className="carousel-item " data-bs-interval="10000">
-                <CCarouselItem doNhua1={danhsachDoNhua[2]} />
+                <Link to={`/plastic-items/${danhsachDoNhua[2].idPlasticItem}`}>
+                    <CCarouselItem doNhua1={danhsachDoNhua[2]} />
+                </Link>
             </div>
           </div>
           <button className="carousel-control-prev" type="button" data-bs-target="#carouselExampleDark" data-bs-slide="prev">

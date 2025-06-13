@@ -21,7 +21,7 @@ export async function getAllOrders(): Promise<OrderModel[]> {
                 feePayment: data.feePayment,
                 dateCreated: data.dateCreated,
                 status: data.status,
-                 user: data._embedded.user,
+                /* user: data._links.user,*/
                 fullName: data.fullName,
                 note: data.note,
                 payment: responsePayment.namePayment,
@@ -72,7 +72,7 @@ export async function get1Orders(idOrder: number): Promise<OrderModel> {
 
     // Sử dụng Promise.all để chờ tất cả các promise hoàn thành
     await Promise.all(responseOrderDetail._embedded.orderDetails.map(async (orderDetail: any) => {
-        const responsePlastic = await  my_request(endpointBE + `/order-details/${orderDetail.idOrderDetail}/plastic`);
+        const responsePlastic = await  my_request(endpointBE + `/order-details/${orderDetail.idOrderDetail}/plasticItem`);
         cartItems.push({ plasticItem: responsePlastic, quantity: orderDetail.quantity, review: orderDetail.review });
     }));
 

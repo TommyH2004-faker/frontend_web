@@ -307,7 +307,8 @@ export const Chart: React.FC<ChartProps> = (props) => {
 										},
 									],
 									highlightScope: {
-										fade: "global",
+										faded: "global",
+										highlighted: "series"
 									},
 									faded: {
 										innerRadius: 30,

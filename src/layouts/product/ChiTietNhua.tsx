@@ -36,9 +36,9 @@ import SelectQuantity from "./componetns/select-quantity/SelectQuantity";
 import Comment from "./componetns/comment/Comment";
 
 
-interface BookDetailProps {}
+interface PlasticDetailProps {}
 
-const BookDetail: React.FC<BookDetailProps> = (props) => {
+const ChiTietNhua: React.FC<PlasticDetailProps> = (props) => {
     useScrollToTop(); // Mỗi lần vào component này thì sẽ ở trên cùng
     const { setTotalCart, cartList } = useCartItem();
 
@@ -109,24 +109,24 @@ const BookDetail: React.FC<BookDetailProps> = (props) => {
     };
 
     // Xử lý thêm sản phẩm vào giỏ hàng
-    const handleAddProduct = async (newPlastic: PlasticModels) => {
+  /*  const handleAddProduct = async (newPlastic: PlasticModels) => {
         // cái isExistBook này sẽ tham chiếu đến cái cart ở trên, nên khi update thì cart nó cũng update theo
-       /* let isExistBook = cartList.find(
+       /!* let isExistBook = cartList.find(
             (cartItem) => cartItem.pllastic.idPlasticItem === newPlastic.idPlasticItem
-        );*/
-        let isExistBook = cartList.find(cartItem =>
+        );*!/
+        let isExistPlastic = cartList.find(cartItem =>
             cartItem.plasticItem && cartItem.plasticItem.idPlasticItem === newPlastic.idPlasticItem
         );
         // Thêm 1 sản phẩm vào giỏ hàng
-        if (isExistBook) {
+        if (isExistPlastic) {
             // nếu có rồi thì sẽ tăng số lượng
-            isExistBook.quantity += quantity;
+            isExistPlastic.quantity += quantity;
 
             // Lưu vào db
             if (isToken()) {
                 const request = {
-                    idCart: isExistBook.idCart,
-                    quantity: isExistBook.quantity,
+                    idCart: isExistPlastic.idCart,
+                    quantity: isExistPlastic.quantity,
                 };
                 const token = localStorage.getItem("token");
                 fetch(endpointBE + `/cart-item/update-item`, {
@@ -144,11 +144,12 @@ const BookDetail: React.FC<BookDetailProps> = (props) => {
                 try {
                     const request = [
                         {
+                            idUser: getIdUserByToken(),
                             quantity: quantity,
                             plastic: newPlastic,
-                            idUser: getIdUserByToken(),
                         },
                     ];
+                    console.log("Du liệu gửi lên: ", request);
                     const token = localStorage.getItem("token");
                     const response = await fetch(
                         endpointBE + "/cart-item/add-item",
@@ -162,6 +163,7 @@ const BookDetail: React.FC<BookDetailProps> = (props) => {
                         }
                     );
 
+                    console.log("Response: ", response);
                     if (response.ok) {
                         const idCart = await response.json();
                         cartList.push({
@@ -183,6 +185,86 @@ const BookDetail: React.FC<BookDetailProps> = (props) => {
         // Lưu vào localStorage
         localStorage.setItem("cart", JSON.stringify(cartList));
         // Thông báo toast
+        toast.success("Thêm vào giỏ hàng thành công");
+        setTotalCart(cartList.length);
+    };*/
+    const handleAddProduct = async (newPlastic: PlasticModels) => {
+        let isExistPlastic = cartList.find(cartItem =>
+            cartItem.plasticItem && cartItem.plasticItem.idPlasticItem === newPlastic.idPlasticItem
+        );
+
+        if (isExistPlastic) {
+            isExistPlastic.quantity += quantity;
+
+            if (isToken()) {
+                const request = {
+                    idCart: isExistPlastic.idCart,
+                    quantity: isExistPlastic.quantity,
+                };
+                const token = localStorage.getItem("token");
+                fetch(endpointBE + `/cart-item/update-item`, {
+                    method: "PUT",
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        "content-type": "application/json",
+                    },
+                    body: JSON.stringify(request),
+                }).catch((err) => console.log(err));
+            }
+        } else {
+            if (isToken()) {
+                try {
+                    // Xóa thuộc tính thumbnail nếu nó là undefined
+                    const cleanedPlastic = { ...newPlastic };
+                    if (cleanedPlastic.thumbnail === undefined) {
+                        delete cleanedPlastic.thumbnail;
+                    }
+
+                    const request = [
+                        {
+                            quantity: quantity,
+                            plastic: cleanedPlastic,
+                            idUser: getIdUserByToken(),
+                        },
+                    ];
+
+                    console.log("Dữ liệu gửi lên: ", request);
+
+                    const token = localStorage.getItem("token");
+                    const response = await fetch(endpointBE + "/cart-item/add-item", {
+                        method: "POST",
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                            "content-type": "application/json",
+                        },
+                        body: JSON.stringify(request),
+                    });
+
+                    console.log("Response: ", response);
+
+                    if (response.ok) {
+                        const idCart = await response.json();
+                        cartList.push({
+                            idCart: idCart,
+                            quantity: quantity,
+                            plasticItem: newPlastic,
+                        });
+                    } else {
+                        const errorMessage = await response.text();
+                        console.error("Lỗi phản hồi server: ", errorMessage);
+                    }
+                } catch (error) {
+                    console.log(error);
+                }
+            } else {
+                cartList.push({
+                    quantity: quantity,
+                    plasticItem: newPlastic,
+                });
+            }
+        }
+
+        localStorage.setItem("cart", JSON.stringify(cartList));
         toast.success("Thêm vào giỏ hàng thành công");
         setTotalCart(cartList.length);
     };
@@ -459,4 +541,4 @@ const BookDetail: React.FC<BookDetailProps> = (props) => {
     );
 };
 
-export default BookDetail;
+export default ChiTietNhua;

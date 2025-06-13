@@ -63,7 +63,7 @@ const DangNhap: React.FC<LoginPageProps> = (props) => {
                 console.log("Token nhận được:", jwt);
                 const decodedToken = jwtDecode(jwt) as JwtPayload;
                 console.log("Decode token : ",decodedToken)
-                if (decodedToken.enabled==false) {
+                if (!decodedToken.enabled) {
                     toast.warning("Tài khoản chưa kích hoạt hoặc bị vô hiệu hoá.");
                     return;
                 }
@@ -75,10 +75,15 @@ const DangNhap: React.FC<LoginPageProps> = (props) => {
 
                 const cartData: string | null = localStorage.getItem("cart");
                 let cart: CartItemModel[] = cartData ? JSON.parse(cartData) : [];
+                console.log("Cart trước khi đăng nhập: ", cart);
                 // Khi đăng nhập thành công mà trước đó đã thêm sản phẩm vào giỏ hàng thì các sản phẩm đó sẽ được thêm vào db
                 if (cart.length !== 0) {
-                    cart = cart.map((c) => ({ ...c, idUser: decodedToken.id }));
-
+                   /* cart = cart.map((c) => ({ ...c, idUser: decodedToken.id }));*/
+                    const cartTo = cart.map((c) => ({
+                        idUser: decodedToken.id,
+                        plastic: c.plasticItem,
+                        quantity: c.quantity,
+                    }));
                     const endpoint = endpointBE + "/cart-item/add-item";
                     fetch(endpoint, {
                         method: "POST",
@@ -86,7 +91,7 @@ const DangNhap: React.FC<LoginPageProps> = (props) => {
                             Authorization: `Bearer ${jwt}`,
                             "content-type": "application/json",
                         },
-                        body: JSON.stringify(cart),
+                        body: JSON.stringify(cartTo),
                     })
                         .then((response) => {
                             // Lấy giỏ hàng của user khi đăng nhâp thành công
@@ -95,6 +100,7 @@ const DangNhap: React.FC<LoginPageProps> = (props) => {
                                 // Xoá cart mà lúc chưa đăng nhập
                              /*   localStorage.removeItem("cart");*/
                                 cart = response;
+                                console.log("Cart sau khi đăng nhập: ", cart);
                                 // Thêm cart lúc đăng nhập
                                 localStorage.setItem("cart", JSON.stringify(cart));
                                 setTotalCart(cart.length);

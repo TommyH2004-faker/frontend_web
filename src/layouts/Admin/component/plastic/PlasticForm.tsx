@@ -14,6 +14,7 @@ import PlasticModels from "../../../../models/PlasticModels";
 import {getPlasticByIdAllInformation} from "../../../../api/PlasticApi";
 import {getAllGenres} from "../../../../api/GenresApi";
 import {SelectMultiple} from "../../../utils/SelectMultiple";
+import imageCompression from "browser-image-compression";
 
 
 
@@ -95,6 +96,8 @@ export const PlasticForm: React.FC<PlasticFormProps> = (props) => {
 		if (plasticModel.discountPercent === 0) {
 			plasticModel = { ...plastic, sellPrice: plastic.listPrice };
 		}
+		console.log("Dữ liệu gửi lên:", JSON.stringify(plasticModel));
+		console.log('Payload size (bytes):', JSON.stringify(plasticModel).length);
 
 		// console.log(plastic);
 
@@ -155,6 +158,7 @@ export const PlasticForm: React.FC<PlasticFormProps> = (props) => {
 			}
 		);
 	}
+	
 
 	function handleThumnailImageUpload(
 		event: React.ChangeEvent<HTMLInputElement>
@@ -170,6 +174,7 @@ export const PlasticForm: React.FC<PlasticFormProps> = (props) => {
 			reader.onload = (e: any) => {
 				// e.target.result chính là chuỗi base64
 				const thumnailBase64 = e.target?.result as string;
+				console.log("Thumbnail base64 length:", thumnailBase64.length); // <== dòng này để debug
 
 				setPlastic({ ...plastic, thumbnail: thumnailBase64 });
 
@@ -202,7 +207,7 @@ export const PlasticForm: React.FC<PlasticFormProps> = (props) => {
 				reader.onload = (e: any) => {
 					// e.target.result chính là chuỗi base64
 					const thumbnailBase64 = e.target?.result as string;
-
+					console.log("Related image base64 length:", thumbnailBase64.length);
 					setPlastic((prevBook) => ({
 						...prevBook,
 						relatedImg: [...(prevBook.relatedImg || []), thumbnailBase64],
@@ -216,36 +221,45 @@ export const PlasticForm: React.FC<PlasticFormProps> = (props) => {
 
 				// Đọc tệp dưới dạng chuỗi base64
 				reader.readAsDataURL(selectedFile);
+				const totalBase64Length =
+					(plastic.thumbnail?.length || 0) +
+					(plastic.relatedImg?.reduce((sum, img) => sum + (img.length || 0), 0) || 0);
+
+				console.log("Tổng độ dài base64:", totalBase64Length);
+
 			}
 		}
 	}
 
+
+
 	return (
 		<div>
 			<Typography className='text-center' variant='h4' component='h2'>
-				{props.option === "add" ? "TẠO SÁCH" : "SỬA SÁCH"}
+				{props.option === "add" ? "TẠO SẢN PHẨM" : "SỬA SẢN PHẨM"}
 			</Typography>
 			<hr />
 			<div className='container px-5'>
-				<form onSubmit={hanleSubmit} className='form'>
-					<input type='hidden' id='idBook' value={plastic?.idPlasticItem} hidden />
+				<form onSubmit={hanleSubmit} className="form">
+
+					<input type='hidden' id='idBook' value={plastic?.idPlasticItem} hidden/>
 					<div className='row'>
 						<div
 							className={props.option === "update" ? "col-4" : "col-6"}
 						>
 							<Box
 								sx={{
-									"& .MuiTextField-root": { mb: 3 },
+									"& .MuiTextField-root": {mb: 3},
 								}}
 							>
 								<TextField
 									required
 									id='filled-required'
-									label='Tên sách'
-									style={{ width: "100%" }}
+									label='Tên sản phẩm'
+									style={{width: "100%"}}
 									value={plastic.namePlasticItem}
 									onChange={(e: any) =>
-										setPlastic({ ...plastic, namePlasticItem: e.target.value })
+										setPlastic({...plastic, namePlasticItem: e.target.value})
 									}
 									size='small'
 								/>
@@ -253,11 +267,11 @@ export const PlasticForm: React.FC<PlasticFormProps> = (props) => {
 								<TextField
 									required
 									id='filled-required'
-									label='Nhà saản xuất'
-									style={{ width: "100%" }}
+									label='Nhà sản xuất'
+									style={{width: "100%"}}
 									value={plastic.manufacturer}
 									onChange={(e: any) =>
-										setPlastic({ ...plastic, manufacturer: e.target.value })
+										setPlastic({...plastic, manufacturer: e.target.value})
 									}
 									size='small'
 								/>
@@ -266,7 +280,7 @@ export const PlasticForm: React.FC<PlasticFormProps> = (props) => {
 									required
 									id='filled-required'
 									label='Giá niêm yết'
-									style={{ width: "100%" }}
+									style={{width: "100%"}}
 									type='number'
 									value={
 										Number.isNaN(plastic.listPrice) ? "" : plastic.listPrice
@@ -286,14 +300,14 @@ export const PlasticForm: React.FC<PlasticFormProps> = (props) => {
 						>
 							<Box
 								sx={{
-									"& .MuiTextField-root": { mb: 3 },
+									"& .MuiTextField-root": {mb: 3},
 								}}
 							>
 								<TextField
 									required
 									id='filled-required'
 									label='Số lượng'
-									style={{ width: "100%" }}
+									style={{width: "100%"}}
 									type='number'
 									value={
 										Number.isNaN(plastic.quantity) ? "" : plastic.quantity
@@ -320,7 +334,7 @@ export const PlasticForm: React.FC<PlasticFormProps> = (props) => {
 								<TextField
 									id='filled-required'
 									label='Giảm giá (%)'
-									style={{ width: "100%" }}
+									style={{width: "100%"}}
 									type='number'
 									value={
 										Number.isNaN(plastic.discountPercent)
@@ -336,7 +350,7 @@ export const PlasticForm: React.FC<PlasticFormProps> = (props) => {
 												Math.round(
 													(plastic.listPrice *
 														Number.parseInt(e.target.value)) /
-														100
+													100
 												),
 										});
 									}}
@@ -348,13 +362,13 @@ export const PlasticForm: React.FC<PlasticFormProps> = (props) => {
 							<div className='col-4'>
 								<Box
 									sx={{
-										"& .MuiTextField-root": { mb: 3 },
+										"& .MuiTextField-root": {mb: 3},
 									}}
 								>
 									<TextField
 										id='filled-required'
 										label='Giá bán'
-										style={{ width: "100%" }}
+										style={{width: "100%"}}
 										value={plastic.sellPrice.toLocaleString("vi-vn")}
 										type='number'
 										InputProps={{
@@ -366,7 +380,7 @@ export const PlasticForm: React.FC<PlasticFormProps> = (props) => {
 									<TextField
 										id='filled-required'
 										label='Đã bán'
-										style={{ width: "100%" }}
+										style={{width: "100%"}}
 										value={plastic.soldQuantity}
 										InputProps={{
 											disabled: true,
@@ -377,7 +391,7 @@ export const PlasticForm: React.FC<PlasticFormProps> = (props) => {
 									<TextField
 										id='filled-required'
 										label='Điểm đánh giá'
-										style={{ width: "100%" }}
+										style={{width: "100%"}}
 										value={plastic.avgRating}
 										InputProps={{
 											disabled: true,
@@ -391,13 +405,13 @@ export const PlasticForm: React.FC<PlasticFormProps> = (props) => {
 							<Box>
 								<TextField
 									id='outlined-multiline-flexible'
-									label='Mô tả sách'
-									style={{ width: "100%" }}
+									label='Mô tả sản phẩm'
+									style={{width: "100%"}}
 									multiline
 									maxRows={5}
 									value={plastic.description}
 									onChange={(e: any) =>
-										setPlastic({ ...plastic, description: e.target.value })
+										setPlastic({...plastic, description: e.target.value})
 									}
 									required
 								/>
@@ -408,11 +422,11 @@ export const PlasticForm: React.FC<PlasticFormProps> = (props) => {
 								size='small'
 								component='label'
 								variant='outlined'
-								startIcon={<CloudUpload />}
+								startIcon={<CloudUpload/>}
 							>
 								Tải ảnh thumbnail
 								<input
-									style={{ opacity: "0", width: "10px" }}
+									style={{opacity: "0", width: "10px"}}
 									required={props.option === "update" ? false : true}
 									type='file'
 									accept='image/*'
@@ -420,18 +434,18 @@ export const PlasticForm: React.FC<PlasticFormProps> = (props) => {
 									alt=''
 								/>
 							</Button>
-							<img src={previewThumbnail} alt='' width={100} />
+							<img src={previewThumbnail} alt='' width={100}/>
 						</div>
 						<div className='d-flex align-items-center mt-3'>
 							<Button
 								size='small'
 								component='label'
 								variant='outlined'
-								startIcon={<CloudUpload />}
+								startIcon={<CloudUpload/>}
 							>
 								Tải ảnh liên quan
 								<input
-									style={{ opacity: "0", width: "10px" }}
+									style={{opacity: "0", width: "10px"}}
 									// required
 									type='file'
 									accept='image/*'
@@ -441,13 +455,13 @@ export const PlasticForm: React.FC<PlasticFormProps> = (props) => {
 								/>
 							</Button>
 							{previewRelatedImages.map((imgURL) => (
-								<img src={imgURL} alt='' width={100} />
+								<img src={imgURL} alt='' width={100}/>
 							))}
 							{previewRelatedImages.length > 0 && (
 								<Button
 									onClick={() => {
 										setPreviewRelatedImages([]);
-										setPlastic({ ...plastic, relatedImg: [] });
+										setPlastic({...plastic, relatedImg: []});
 									}}
 								>
 									Xoá tất cả
@@ -461,9 +475,9 @@ export const PlasticForm: React.FC<PlasticFormProps> = (props) => {
 							type='submit'
 							loading={statusBtn}
 							variant='outlined'
-							sx={{ width: "25%", padding: "10px" }}
+							sx={{width: "25%", padding: "10px"}}
 						>
-							{props.option === "add" ? "Tạo sách" : "Lưu sách"}
+							{props.option === "add" ? "Tạo sản phẩm" : "Lưu sản phẩm"}
 						</LoadingButton>
 					)}
 				</form>
