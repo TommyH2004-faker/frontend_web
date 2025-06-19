@@ -29,8 +29,9 @@ import GenreManagementPage from "./layouts/Admin/GenreManagement";
 import OrderManagementPage from "./layouts/Admin/OrderManagement";
 import FeedbackPage from "./layouts/Admin/FeedbackManagement";
 import {Error404Page} from "./page/components/404Page";
-import Banner from "./layouts/homepage/components/Banner";
-import BannerCarousel from "./layouts/header-footer/BannerCarousel";
+
+
+import {CheckoutSuccess} from "./page/components/CheckoutSuccess";
 
 const MyRoutes = () => {
     const [tuKhoaTimKiem, setTuKhoaTimKiem] = useState('');
@@ -71,7 +72,7 @@ const MyRoutes = () => {
                             <Route path='/feedback' element={<FeedbackCustomerPage />} />
                             <Route path='/forgot-password' element={<ForgotPassword />} />
                             <Route path='/profile' element={<ProfilePage setReloadAvatar={setReloadAvatar} />} />
-
+                            <Route path='/check-out/status' element={<CheckoutSuccess />} />
                             {/* Nếu không tìm thấy trang */}
                             <Route path='*' element={<Error403Page />} />
                         </Routes>

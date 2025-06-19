@@ -81,6 +81,7 @@ export async function get1User(idUser: any): Promise<UserModel> {
       phoneNumber: responseUser.phoneNumber,
       username: responseUser.username,
       role: responseRole.idRole,
+      enabled: responseUser.enabled,
    };
 
    return user;

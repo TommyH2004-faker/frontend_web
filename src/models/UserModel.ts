@@ -14,8 +14,8 @@ class UserModel {
    phoneNumber: string; // so dien thoai
    username: string; // ten dang nhap
    avatar: string; // anh dai dien
-   role?: number; // vai tro
-
+   role?: number;// vai tro
+   enabled?: boolean; // trang thai kich hoat
 
    constructor(idUser: number,
                dateOfBirth: Date,
@@ -27,7 +27,7 @@ class UserModel {
                gender: string,
                password: string,
                phoneNumber: string,
-               username: string, avatar: string,role: number) {
+               username: string, avatar: string,role: number,enabled?: boolean) {
       this.idUser = idUser;
       this.dateOfBirth = dateOfBirth;
       this.deliveryAddress = deliveryAddress;
@@ -41,6 +41,7 @@ class UserModel {
       this.username = username;
       this.avatar = avatar;
       this.role = role;
+        this.enabled = enabled;
    }
 }
 

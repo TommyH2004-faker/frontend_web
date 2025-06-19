@@ -144,14 +144,14 @@ export const PlasticForm: React.FC<PlasticFormProps> = (props) => {
 							? toast.success("Thêm plastic thành công")
 							: toast.success("Cập nhật plastic thành công");
 					} else {
-						toast.error("Gặp lỗi trong quá trình xử lý plastic");
+						toast.error("Gặp lỗi trong quá trình xử lý plastic1");
 						setStatusBtn(false);
 					}
 				})
 				.catch((error) => {
 					console.log(error);
 					setStatusBtn(false);
-					toast.error("Gặp lỗi trong quá trình xử lý plastic");
+					toast.error("Gặp lỗi trong quá trình xử lý plastic2");
 				}),
 			{
 				pending: "Đang trong quá trình xử lý ...",

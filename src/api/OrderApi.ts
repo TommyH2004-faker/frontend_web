@@ -52,7 +52,7 @@ export async function getAllOrdersByIdUser(idUser: number): Promise<OrderModel[]
             feePayment: data.feePayment,
             dateCreated: data.dateCreated,
             status: data.status,
-            user: data._embedded.user,
+            /*user: data._embedded.user,*/
             fullName: data.fullName,
             note: data.note,
             payment: responsePayment.namePayment,

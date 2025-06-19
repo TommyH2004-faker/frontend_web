@@ -9,9 +9,10 @@ import {
 } from "@mui/material";
 import { GridColDef } from "@mui/x-data-grid";
 import React, { useEffect, useState } from "react";
-import {getAllOrders} from "../../../../api/OrderApi";
+import {getAllOrders, getAllOrdersByIdUser} from "../../../../api/OrderApi";
 import OrderModel from "../../../../models/OrderModel";
 import {DataTable} from "../../../utils/DataTable";
+import {getIdUserByToken, getRoleByToken} from "../../../utils/JwtService";
 
 
 interface OrderTableProps {
@@ -20,6 +21,7 @@ interface OrderTableProps {
 	handleOpenModal: any;
 	setKeyCountReload?: any;
 	keyCountReload?: any;
+
 }
 
 export const OrderTable: React.FC<OrderTableProps> = (props) => {
@@ -27,19 +29,37 @@ export const OrderTable: React.FC<OrderTableProps> = (props) => {
 	// Tạo biến để lấy tất cả data
 	const [data, setData] = useState<OrderModel[]>([]);
 	useEffect(() => {
-		getAllOrders()
-			.then((response) => {
-				const orders = response.map((order) => ({
+		setLoading(true);
+		const role = getRoleByToken();
+		const fetchData = async () => {
+			try {
+				let ordersData: OrderModel[] = [];
+
+				if (role=="ADMIN") {
+					ordersData = await getAllOrders();
+				} else {
+					const idUser = getIdUserByToken();
+					ordersData = await getAllOrdersByIdUser(idUser);
+				}
+
+				const orders = ordersData.map((order) => ({
 					...order,
 					id: order.idOrder,
 					nameCustomer: order.fullName,
 				}));
 
 				setData(orders);
+			} catch (error) {
+				console.error("Lỗi lấy đơn hàng:", error);
+			} finally {
 				setLoading(false);
-			})
-			.catch((error) => console.log(error));
+			}
+		};
+
+		fetchData();
 	}, [props.keyCountReload]);
+
+
 
 	const columns: GridColDef[] = [
 		{ field: "id", headerName: "ID", width: 80 },

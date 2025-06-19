@@ -5,7 +5,8 @@ import PlasticCard from "../product/componetns/PlasticProps";
 import PlasticList from "../product/PlasticList";
 import DanhSachSanPham from "../product/DanhSachSanPham";
 import {useParams} from "react-router-dom";
-import BannerCarousel from "../header-footer/BannerCarousel";
+import BannerCarousel from "./components/BannerCarousel";
+
 interface HomePageProps {
     tuKhoaTimKiem: string;
 

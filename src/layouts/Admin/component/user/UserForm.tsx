@@ -51,6 +51,7 @@ export const UserForm: React.FC<UserFormProps> = (props) => {
 		password: "",
 		avatar: "",
 		role: 3,
+		enabled: true,
 	});
 	const [avatar, setAvatar] = useState<File | null>(null);
 	const [previewAvatar, setPreviewAvatar] = useState("");
@@ -200,14 +201,14 @@ export const UserForm: React.FC<UserFormProps> = (props) => {
 						<div className='col-6'>
 							<Box
 								sx={{
-									"& .MuiTextField-root": { mb: 3 },
+									"& .MuiTextField-root": {mb: 3},
 								}}
 							>
 								<TextField
 									required
 									id='filled-required'
 									label='Tên tài khoản'
-									style={{ width: "100%" }}
+									style={{width: "100%"}}
 									error={errorUsername.length > 0 ? true : false}
 									helperText={errorUsername}
 									value={user.username}
@@ -216,7 +217,7 @@ export const UserForm: React.FC<UserFormProps> = (props) => {
 											props.option === "update" ? true : false,
 									}}
 									onChange={(e: any) => {
-										setUser({ ...user, username: e.target.value });
+										setUser({...user, username: e.target.value});
 										setErrorUsername("");
 									}}
 									onBlur={(e: any) => {
@@ -233,12 +234,12 @@ export const UserForm: React.FC<UserFormProps> = (props) => {
 									id='filled-required'
 									type='password'
 									label='Mật khẩu'
-									style={{ width: "100%" }}
+									style={{width: "100%"}}
 									error={errorPassword.length > 0 ? true : false}
 									helperText={errorPassword}
 									value={user.password}
 									onChange={(e: any) => {
-										setUser({ ...user, password: e.target.value });
+										setUser({...user, password: e.target.value});
 										setErrorPassword("");
 									}}
 									onBlur={(e: any) => {
@@ -252,7 +253,7 @@ export const UserForm: React.FC<UserFormProps> = (props) => {
 									id='filled-required'
 									label='Email'
 									type='email'
-									style={{ width: "100%" }}
+									style={{width: "100%"}}
 									error={errorEmail.length > 0 ? true : false}
 									helperText={errorEmail}
 									value={user.email}
@@ -261,7 +262,7 @@ export const UserForm: React.FC<UserFormProps> = (props) => {
 											props.option === "update" ? true : false,
 									}}
 									onChange={(e: any) => {
-										setUser({ ...user, email: e.target.value });
+										setUser({...user, email: e.target.value});
 										setErrorEmail("");
 									}}
 									onBlur={(e: any) => {
@@ -274,7 +275,7 @@ export const UserForm: React.FC<UserFormProps> = (props) => {
 									required
 									id='filled-required'
 									label='Số điện thoại'
-									style={{ width: "100%" }}
+									style={{width: "100%"}}
 									error={errorPhoneNumber.length > 0 ? true : false}
 									helperText={errorPhoneNumber}
 									value={user.phoneNumber}
@@ -294,11 +295,12 @@ export const UserForm: React.FC<UserFormProps> = (props) => {
 									size='small'
 								/>
 
+
 								<TextField
 									required
 									id='filled-required'
 									label='Ngày sinh'
-									style={{ width: "100%" }}
+									style={{width: "100%"}}
 									type='date'
 									value={user.dateOfBirth.toISOString().split("T")[0]}
 									onChange={handleDateChange}
@@ -309,16 +311,16 @@ export const UserForm: React.FC<UserFormProps> = (props) => {
 						<div className='col-6'>
 							<Box
 								sx={{
-									"& .MuiTextField-root": { mb: 3 },
+									"& .MuiTextField-root": {mb: 3},
 								}}
 							>
 								<TextField
 									id='filled-required'
 									label='Họ đệm'
-									style={{ width: "100%" }}
+									style={{width: "100%"}}
 									value={user.firstName}
 									onChange={(e: any) =>
-										setUser({ ...user, firstName: e.target.value })
+										setUser({...user, firstName: e.target.value})
 									}
 									size='small'
 								/>
@@ -327,10 +329,10 @@ export const UserForm: React.FC<UserFormProps> = (props) => {
 									required
 									id='filled-required'
 									label='Tên'
-									style={{ width: "100%" }}
+									style={{width: "100%"}}
 									value={user.lastName}
 									onChange={(e: any) =>
-										setUser({ ...user, lastName: e.target.value })
+										setUser({...user, lastName: e.target.value })
 									}
 									size='small'
 								/>
@@ -393,6 +395,40 @@ export const UserForm: React.FC<UserFormProps> = (props) => {
 										))}
 									</Select>
 								</FormControl>
+								{/* Kích hoạt tài khoản */}
+								<div className="mt-4 mb-3">
+									<Typography variant="subtitle1" gutterBottom>
+										Trạng thái kích hoạt:
+									</Typography>
+									<div
+										onClick={() => setUser({...user, enabled: !user.enabled})}
+										style={{
+											width: "50px",
+											height: "28px",
+											borderRadius: "999px",
+											backgroundColor: user.enabled ? "#4caf50" : "#ccc",
+											position: "relative",
+											cursor: "pointer",
+											transition: "background-color 0.3s",
+										}}
+									>
+										<div
+											style={{
+												width: "22px",
+												height: "22px",
+												borderRadius: "50%",
+												backgroundColor: "#fff",
+												position: "absolute",
+												top: "3px",
+												left: user.enabled ? "25px" : "3px",
+												transition: "left 0.3s",
+												boxShadow: "0 1px 3px rgba(0,0,0,0.3)",
+											}}
+										/>
+									</div>
+								</div>
+
+
 							</Box>
 						</div>
 						<div className='d-flex align-items-center mt-3'>
@@ -400,11 +436,11 @@ export const UserForm: React.FC<UserFormProps> = (props) => {
 								size='small'
 								component='label'
 								variant='outlined'
-								startIcon={<CloudUpload />}
+								startIcon={<CloudUpload/>}
 							>
 								Tải ảnh avatar
 								<input
-									style={{ opacity: "0", width: "10px" }}
+									style={{opacity: "0", width: "10px"}}
 									// required
 									type='file'
 									accept='image/*'
@@ -413,7 +449,7 @@ export const UserForm: React.FC<UserFormProps> = (props) => {
 								/>
 							</Button>
 							<span className='ms-3'>{avatar?.name}</span>
-							<img src={previewAvatar} alt='' width={100} />
+							<img src={previewAvatar} alt='' width={100}/>
 						</div>
 					</div>
 					<LoadingButton
