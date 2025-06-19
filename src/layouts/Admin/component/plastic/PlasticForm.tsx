@@ -48,6 +48,11 @@ export const PlasticForm: React.FC<PlasticFormProps> = (props) => {
 	const [previewRelatedImages, setPreviewRelatedImages] = useState<string[]>(
 		[]
 	);
+
+	const [thumbnailFile, setThumbnailFile] = useState<File | null>(null);
+	const [relatedImageFiles, setRelatedImageFiles] = useState<File[]>([]);
+
+
 	// Giá trị khi đã chọn ở trong select multiple
 	const [SelectedListName, setSelectedListName] = useState<any[]>([]);
 	// Khi submit thì btn loading ...
@@ -87,149 +92,115 @@ export const PlasticForm: React.FC<PlasticFormProps> = (props) => {
 		setPlastic({ ...plastic, idGenres: genresListSelected });
 	}, [genresListSelected]);
 
-	async function hanleSubmit(event: FormEvent<HTMLFormElement>) {
-		event.preventDefault();
 
+	function handleThumnailImageUpload(event: React.ChangeEvent<HTMLInputElement>) {
+		const file = event.target.files?.[0];
+		if (file) {
+			setThumbnailFile(file);
+			setPreviewThumbnail(URL.createObjectURL(file));
+		}
+	}
+	function handleImageUpload(event: React.ChangeEvent<HTMLInputElement>) {
+		const files = Array.from(event.target.files || []);
+		if (previewRelatedImages.length + files.length > 5) {
+			toast.warning("Chỉ được tải lên tối đa 5 ảnh");
+			return;
+		}
+		setRelatedImageFiles(prev => [...prev, ...files]);
+		const newPreviews = files.map(file => URL.createObjectURL(file));
+		setPreviewRelatedImages(prev => [...prev, ...newPreviews]);
+	}
+	const initialPlastic: PlasticModels = {
+		idPlasticItem: 0,
+		namePlasticItem: "",
+		manufacturer: "",
+		description: "",
+		listPrice: 0,
+		sellPrice: 0,
+		quantity: 0,
+		avgRating: 0,
+		soldQuantity: 0,
+		discountPercent: 0,
+		thumbnail: "",
+		relatedImg: [],
+		idGenres: [],
+	};
+
+	async function handleSubmit(event: FormEvent<HTMLFormElement>) {
+		event.preventDefault();
+		setStatusBtn(true);
 		const token = localStorage.getItem("token");
 
-		let plasticModel: PlasticModels = plastic;
-		if (plasticModel.discountPercent === 0) {
-			plasticModel = { ...plastic, sellPrice: plastic.listPrice };
-		}
-		console.log("Dữ liệu gửi lên:", JSON.stringify(plasticModel));
-		console.log('Payload size (bytes):', JSON.stringify(plasticModel).length);
+		try {
+			// 👉 Bước 1: Upload ảnh (nếu có)
+			const formData = new FormData();
+			if (thumbnailFile) formData.append("thumbnail", thumbnailFile);
+			relatedImageFiles.forEach((file) => formData.append("relatedImg", file));
 
-		// console.log(plastic);
+			let thumbnailUrl = plastic.thumbnail;
+			let relatedImgUrls = plastic.relatedImg;
 
-		setStatusBtn(true);
-
-		const endpoint =
-			props.option === "add"
-				? endpointBE + "/plastic/add-plastic"
-				: endpointBE + "/plastic/update-plastic";
-		const method = props.option === "add" ? "POST" : "PUT";
-		toast.promise(
-			fetch(endpoint, {
-				method: method,
-				headers: {
-					Authorization: `Bearer ${token}`,
-					"content-type": "application/json",
-				},
-				body: JSON.stringify(plasticModel),
-			})
-				.then((response) => {
-					if (response.ok) {
-						setPlastic({
-							idPlasticItem:0,
-							namePlasticItem: "",
-							manufacturer: "",
-							description: "",
-							listPrice: NaN,
-							sellPrice: NaN,
-							quantity: NaN,
-							avgRating: NaN,
-							soldQuantity: NaN,
-							discountPercent: 0,
-							thumbnail: "",
-							relatedImg: [],
-							idGenres: [],
-						});
-						setPreviewThumbnail("");
-						setPreviewRelatedImages([]);
-						setReloadCount(Math.random());
-						setStatusBtn(false);
-						props.setKeyCountReload(Math.random());
-						props.handleCloseModal();
-						props.option === "add"
-							? toast.success("Thêm plastic thành công")
-							: toast.success("Cập nhật plastic thành công");
-					} else {
-						toast.error("Gặp lỗi trong quá trình xử lý plastic1");
-						setStatusBtn(false);
-					}
-				})
-				.catch((error) => {
-					console.log(error);
-					setStatusBtn(false);
-					toast.error("Gặp lỗi trong quá trình xử lý plastic2");
-				}),
-			{
-				pending: "Đang trong quá trình xử lý ...",
+			// Chỉ upload nếu có file ảnh mới
+			if (thumbnailFile || relatedImageFiles.length > 0) {
+				const uploadRes = await fetch(endpointBE + "/plastics/upload-images", {
+					method: "POST",
+					headers: {
+						Authorization: `Bearer ${token}`,
+					},
+					body: formData,
+				});
+				if (!uploadRes.ok) throw new Error("Upload ảnh thất bại");
+				const uploadData = await uploadRes.json();
+				thumbnailUrl = uploadData.thumbnail ?? plastic.thumbnail;
+				relatedImgUrls = uploadData.relatedImg ?? plastic.relatedImg;
 			}
-		);
-	}
-	
 
-	function handleThumnailImageUpload(
-		event: React.ChangeEvent<HTMLInputElement>
-	) {
-		const inputElement = event.target as HTMLInputElement;
-
-		if (inputElement.files && inputElement.files.length > 0) {
-			const selectedFile = inputElement.files[0];
-
-			const reader = new FileReader();
-
-			// Xử lý sự kiện khi tệp đã được đọc thành công
-			reader.onload = (e: any) => {
-				// e.target.result chính là chuỗi base64
-				const thumnailBase64 = e.target?.result as string;
-				console.log("Thumbnail base64 length:", thumnailBase64.length); // <== dòng này để debug
-
-				setPlastic({ ...plastic, thumbnail: thumnailBase64 });
-
-				setPreviewThumbnail(URL.createObjectURL(selectedFile));
+			// 👉 Bước 2: Gửi dữ liệu chính
+			const plasticModel: PlasticModels = {
+					...plastic,
+				sellPrice: plastic.discountPercent === 0 ? plastic.listPrice : plastic.sellPrice,
+				thumbnail: thumbnailUrl,
+				relatedImg: relatedImgUrls,
 			};
 
-			// Đọc tệp dưới dạng chuỗi base64
-			reader.readAsDataURL(selectedFile);
+			const endpoint =
+				props.option === "add"
+					? endpointBE + "/plastic/add-plastic"
+					: endpointBE + "/plastic/update-plastic";
+
+			const method = props.option === "add" ? "POST" : "PUT";
+
+			const saveRes = await fetch(endpoint, {
+				method,
+				headers: {
+					Authorization: `Bearer ${token}`,
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify(plasticModel),
+			});
+
+			if (!saveRes.ok) throw new Error("Gửi dữ liệu plastic thất bại");
+
+			setPlastic(initialPlastic);
+			setPreviewThumbnail("");
+			setPreviewRelatedImages([]);
+			setThumbnailFile(null);
+			setRelatedImageFiles([]);
+			setReloadCount(Math.random());
+			props.setKeyCountReload(Math.random());
+			props.handleCloseModal();
+
+			toast.success(
+				props.option === "add" ? "Thêm plastic thành công" : "Cập nhật plastic thành công"
+			);
+		} catch (err) {
+			console.error(err);
+			toast.error("Gặp lỗi trong quá trình xử lý");
+		} finally {
+			setStatusBtn(false);
 		}
 	}
 
-	function handleImageUpload(event: React.ChangeEvent<HTMLInputElement>) {
-		const inputElement = event.target as HTMLInputElement;
-
-		if (inputElement.files && inputElement.files.length > 0) {
-			const newPreviewImages = [...previewRelatedImages];
-
-			if (newPreviewImages.length + inputElement.files.length > 5) {
-				toast.warning("Chỉ được tải lên tối đa 5 ảnh");
-				return;
-			}
-
-			// Duyệt qua từng file đã chọn
-			for (let i = 0; i < inputElement.files.length; i++) {
-				const selectedFile = inputElement.files[i];
-
-				const reader = new FileReader();
-
-				// Xử lý sự kiện khi tệp đã được đọc thành công
-				reader.onload = (e: any) => {
-					// e.target.result chính là chuỗi base64
-					const thumbnailBase64 = e.target?.result as string;
-					console.log("Related image base64 length:", thumbnailBase64.length);
-					setPlastic((prevBook) => ({
-						...prevBook,
-						relatedImg: [...(prevBook.relatedImg || []), thumbnailBase64],
-					}));
-
-					newPreviewImages.push(URL.createObjectURL(selectedFile));
-
-					// Cập nhật trạng thái với mảng mới
-					setPreviewRelatedImages(newPreviewImages);
-				};
-
-				// Đọc tệp dưới dạng chuỗi base64
-				reader.readAsDataURL(selectedFile);
-				const totalBase64Length =
-					(plastic.thumbnail?.length || 0) +
-					(plastic.relatedImg?.reduce((sum, img) => sum + (img.length || 0), 0) || 0);
-
-				console.log("Tổng độ dài base64:", totalBase64Length);
-
-			}
-		}
-	}
 
 
 
@@ -240,7 +211,7 @@ export const PlasticForm: React.FC<PlasticFormProps> = (props) => {
 			</Typography>
 			<hr />
 			<div className='container px-5'>
-				<form onSubmit={hanleSubmit} className="form">
+				<form onSubmit={handleSubmit} className="form">
 
 					<input type='hidden' id='idBook' value={plastic?.idPlasticItem} hidden/>
 					<div className='row'>
