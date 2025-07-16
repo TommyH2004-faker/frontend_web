@@ -5,8 +5,8 @@ import Rating from "@mui/material/Rating";
 import React from "react";
 
 interface RatingStarProps {
-	readonly?: boolean;
-	ratingPoint?: number;
+	readonly?: boolean; // readonly là thuộc tính để xác định xem đánh giá có thể chỉnh sửa hay không
+	ratingPoint?: number; // ratingPoint là điểm đánh giá, có thể là số thập phân (ví dụ: 4.5)
 }
 
 const RatingStar: React.FC<RatingStarProps> = (props) => {

@@ -107,7 +107,6 @@ const PlasticCartProps: React.FC<PlasticCartProps> = (props) => {
     // Xử lý giảm số lượng
     const reduce = () => {
         if (quantity) {
-            // Nếu số lượng về không thì xoá sản phẩm đó
             if (quantity - 1 === 0) {
                 handleConfirm();
             } else if (quantity > 1) {

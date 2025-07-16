@@ -44,7 +44,7 @@ export async function getAllPlasticItems(page: number, size: number): Promise<Ke
 
 }
 export async function layToanBoDoNhua(trangHienTai:number): Promise<KetQuaInterFace> {
-    const duongDan = `http://localhost:8080/plastic-items?sort=idPlasticItem,,desc&size=8&page=${trangHienTai}`;
+    const duongDan = `http://localhost:8080/plastic-items?sort=idPlasticItem,desc&size=8&page=${trangHienTai}`;
     return layDanhSachDoNhua(duongDan);
 }
 export async function  timKiemPlastic(tuKhoaTimKiem:string,idGenre:number): Promise<KetQuaInterFace> {
