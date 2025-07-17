@@ -9,7 +9,7 @@ import { toast } from "react-toastify";
 import { LoadingButton } from "@mui/lab";
 
 import GenreModel from "../../../../models/GenreModel";
-import {endpointBE} from "../../../utils/Constant";
+import {endpointBE, endpointFE} from "../../../utils/Constant";
 import PlasticModels from "../../../../models/PlasticModels";
 import {getPlasticByIdAllInformation} from "../../../../api/PlasticApi";
 import {getAllGenres} from "../../../../api/GenresApi";
@@ -142,7 +142,7 @@ export const PlasticForm: React.FC<PlasticFormProps> = (props) => {
 
 			// Chỉ upload nếu có file ảnh mới
 			if (thumbnailFile || relatedImageFiles.length > 0) {
-				const uploadRes = await fetch(endpointBE + "/plastics/upload-images", {
+				const uploadRes = await fetch(endpointFE + "/plastics/upload-images", {
 					method: "POST",
 					headers: {
 						Authorization: `Bearer ${token}`,
@@ -165,8 +165,8 @@ export const PlasticForm: React.FC<PlasticFormProps> = (props) => {
 
 			const endpoint =
 				props.option === "add"
-					? endpointBE + "/plastic/add-plastic"
-					: endpointBE + "/plastic/update-plastic";
+					? endpointFE + "/plastic/add-plastic"
+					: endpointFE + "/plastic/update-plastic";
 
 			const method = props.option === "add" ? "POST" : "PUT";
 

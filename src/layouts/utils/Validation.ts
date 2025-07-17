@@ -1,8 +1,8 @@
-import { endpointBE } from "./Constant";
+import {endpointBE, endpointFE} from "./Constant";
 
 // Hàm check email xem tồn tại chưa
 export const checkExistEmail = async (setErrorEmail: any, email: string) => {
-   const endpoint = endpointBE + `/taikhoan/search/existsByEmail?email=${email}`;
+   const endpoint = endpointFE + `/taikhoan/search/existsByEmail?email=${email}`;
    // Call api
    try {
       const response = await fetch(endpoint);
@@ -26,7 +26,7 @@ export const checkExistUsername = async (setErrorUsername: any, username: string
       setErrorUsername("Tên đăng nhập phải chứa ít nhất 8 ký tự");
       return true;
    }
-   const endpoint = endpointBE + `/taikhoan/search/existsByUsername?username=${username}`;
+   const endpoint = endpointFE + `/taikhoan/search/existsByUsername?username=${username}`;
    // Call api
    try {
       const response = await fetch(endpoint);

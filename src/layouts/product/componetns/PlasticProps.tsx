@@ -7,7 +7,7 @@ import dinhDangSo from "../../utils/dinhDangSo";
 import renderRating from "../../utils/SaoXepHang";
 
 import { getIdUserByToken, isToken } from "../../utils/JwtService";
-import { endpointBE } from "../../utils/Constant";
+import {endpointBE, endpointFE} from "../../utils/Constant";
 import { toast } from "react-toastify";
 import PlasticModels from "../../../models/PlasticModels";
 import {lay1AnhCuaMotNhua} from "../../../api/ImageApi";
@@ -39,7 +39,7 @@ const PlasticProps: React.FC<PlasticPropsInterface> = ({ plastic}) => {
             });
 
         if (isToken()) {
-            fetch(endpointBE + `/favorite-plastic/get-favorite-plastic/${getIdUserByToken()}`)
+            fetch(endpointFE + `/favorite-plastic/get-favorite-plastic/${getIdUserByToken()}`)
                 .then(response => response.json())
                 .then(data => {
                     if (data.includes(maNhua)) {
@@ -65,7 +65,7 @@ const PlasticProps: React.FC<PlasticPropsInterface> = ({ plastic}) => {
                     quantity: isExistPlastic.quantity,
                 };
                 const token = localStorage.getItem("token");
-                fetch(endpointBE + `/cart-item/update-item`, {
+                fetch(endpointFE + `/cart-item/update-item`, {
                     method: "PUT",
                     headers: {
                         Authorization: `Bearer ${token}`,
@@ -94,7 +94,7 @@ const PlasticProps: React.FC<PlasticPropsInterface> = ({ plastic}) => {
                     console.log("Dữ liệu gửi lên: ", request);
 
                     const token = localStorage.getItem("token");
-                    const response = await fetch(endpointBE + "/cart-item/add-item", {
+                    const response = await fetch(endpointFE + "/cart-item/add-item", {
                         method: "POST",
                         headers: {
                             Authorization: `Bearer ${token}`,
@@ -245,8 +245,8 @@ const PlasticProps: React.FC<PlasticPropsInterface> = ({ plastic}) => {
         const token = localStorage.getItem("token");
 
         const url = isFavoriteBook
-            ? endpointBE + `/favorite-plastic/delete-plastic`
-            : endpointBE + `/favorite-plastic/add-plastic`;
+            ? endpointFE + `/favorite-plastic/delete-plastic`
+            : endpointFE + `/favorite-plastic/add-plastic`;
 
         const body = {
             user: {

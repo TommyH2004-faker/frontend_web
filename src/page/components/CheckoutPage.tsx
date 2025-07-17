@@ -19,7 +19,7 @@ import CartItemModel from "../../models/CartItemModel";
 
 import UserModel from "../../models/UserModel";
 import {getIdUserByToken} from "../../layouts/utils/JwtService";
-import {endpointBE} from "../../layouts/utils/Constant";
+import {endpointBE, endpointFE} from "../../layouts/utils/Constant";
 import {checkPhoneNumber} from "../../layouts/utils/Validation";
 
 import {CheckoutSuccess} from "./CheckoutSuccess";
@@ -98,7 +98,7 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = (props) => {
 		if (payment === 2) {
 			try {
 				const response = await fetch(
-					endpointBE +
+					endpointFE +
 						"/vnpay/create-payment?amount=" +
 						props.totalPriceProduct,
 					{
@@ -131,7 +131,7 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = (props) => {
 	const handleSaveOrder = (request: any, isPayNow?: boolean) => {
 		const token = localStorage.getItem("token");
 
-		fetch(endpointBE + "/order/add-order", {
+		fetch(endpointFE + "/order/add-order", {
 			method: "POST",
 			headers: {
 				Authorization: `Bearer ${token}`,

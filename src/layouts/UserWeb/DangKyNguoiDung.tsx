@@ -9,7 +9,7 @@ import {
     checkPhoneNumber,
     checkRepeatPassword
 } from "../utils/Validation";
-import {endpointBE} from "../utils/Constant";
+import {endpointBE, endpointFE} from "../utils/Constant";
 import {toast} from "react-toastify";
 import {TextField} from "@mui/material";
 import {LoadingButton} from "@mui/lab";
@@ -81,7 +81,7 @@ const DangKyNguoiDung: React.FC = () => {
             isPhoneNumberValid
         ) {
             try {
-                const endpoint = endpointBE + "/taikhoan/register";
+                const endpoint = endpointFE + "/taikhoan/register";
 
                 const response = await toast.promise(
                     fetch(endpoint, {

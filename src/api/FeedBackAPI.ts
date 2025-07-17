@@ -1,12 +1,12 @@
 import { my_request, requestAdmin } from './Request';
 import FeedbackModel from "../models/FeedbackModel";
 import ReviewModel from "../models/ReviewModel";
-import { endpointBE } from "../layouts/utils/Constant";
+import {endpointBE, endpointFE} from "../layouts/utils/Constant";
 
 // getTotalNumberOfFeedbacks
 export async function getTotalNumberOfFeedbacks(): Promise<number> {
     // Xác định endpoint
-    const duongDan: string = `http://localhost:8080/feedback/totalFeedbacks`;
+    const duongDan: string = `https://backend-webtommysf.onrender.com/feedback/totalFeedbacks`;
     // Gọi phương thức request
     const response = await my_request(duongDan);
     return response;
@@ -40,7 +40,7 @@ async function fetchUserName(userLink: string): Promise<string> {
     return feedbacks;
 }*/
 export async function getAllFeedback(): Promise<FeedbackModel[]> {
-    const endpoint = `${endpointBE}/feedbacks?sort=idFeedback,desc`;
+    const endpoint = `${endpointFE}/feedbacks?sort=idFeedback,desc`;
     const response = await requestAdmin(endpoint);
 
     let feedbacks: FeedbackModel[] = [];
@@ -86,12 +86,12 @@ async function layDanhGiaCuaMotSach(duongDan: string): Promise<ReviewModel[]> {
 
 // Lay toan bo danh gia cua mot sach
 export async function layToanBoDanhGiaCuaMotPlastic(maNhua: number): Promise<ReviewModel[]> {
-    const duongDan: string = `http://localhost:8080/plastic-items/${maNhua}/listReviews`;
+    const duongDan: string = `https://backend-webtommysf.onrender.com/plastic-items/${maNhua}/listReviews`;
     return layDanhGiaCuaMotSach(duongDan);
 }
 
 // Lay 1 danh gia cua mot sach
 export async function lay1DanhGiaCuaMotPlastic(maNhua: number): Promise<ReviewModel[]> {
-    const duongDan: string = `http://localhost:8080/plastic-items/${maNhua}/listReviews?sort=idReview,asc&page=0&size=1`;
+    const duongDan: string = `https://backend-webtommysf.onrender.com/plastic-items/${maNhua}/listReviews?sort=idReview,asc&page=0&size=1`;
     return layDanhGiaCuaMotSach(duongDan);
 }

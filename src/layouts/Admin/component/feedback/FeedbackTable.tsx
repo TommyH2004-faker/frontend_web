@@ -7,7 +7,7 @@ import { toast } from "react-toastify";
 import CheckIcon from "@mui/icons-material/Check";
 import { VisibilityOutlined } from "@mui/icons-material";
 import FeedbackModel from "../../../../models/FeedbackModel";
-import {endpointBE} from "../../../utils/Constant";
+import {endpointBE, endpointFE} from "../../../utils/Constant";
 
 import {DataTable} from "../../../utils/DataTable";
 import {getAllFeedback} from "../../../../api/FeedBackAPI";
@@ -39,7 +39,7 @@ export const FeedbackTable: React.FC = (props) => {
 		}
 
 		toast.promise(
-			fetch(endpointBE + `/feedback/update-feedback/${idFeedback}`, {
+			fetch(endpointFE + `/feedback/update-feedback/${idFeedback}`, {
 				method: "PUT",
 				headers: {
 					Authorization: `Bearer ${token}`,

@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useEffect, useState } from "react";
-import { endpointBE } from "../utils/Constant";
+import {endpointBE, endpointFE} from "../utils/Constant";
 import { getIdUserByToken } from "../utils/JwtService";
 
 import { Button, Skeleton } from "@mui/material";
@@ -19,7 +19,7 @@ const FavoritePlasticsList: React.FC<FavoritePlasticsListProps> = (props) => {
 
     useEffect(() => {
         fetch(
-            endpointBE + `/favorite-plastic/get-favorite-plastic/${getIdUserByToken()}`
+            endpointFE + `/favorite-plastic/get-favorite-plastic/${getIdUserByToken()}`
         )
             .then((response) => response.json())
             .then((idPlaticList) => {

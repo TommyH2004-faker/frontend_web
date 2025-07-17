@@ -6,7 +6,7 @@ import TextEllipsis from "./text-ellipsis/TextEllipsis";
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
 import { useConfirm } from "material-ui-confirm";
 import { isToken } from "../../utils/JwtService";
-import { endpointBE } from "../../utils/Constant";
+import {endpointBE, endpointFE} from "../../utils/Constant";
 
 import { toast } from "react-toastify";
 import CartItemModel from "../../../models/CartItemModel";
@@ -49,7 +49,7 @@ const PlasticCartProps: React.FC<PlasticCartProps> = (props) => {
                 props.handleRemoveBook(props.cartItem.plasticItem.idPlasticItem);
                 if (isToken()) {
                     const token = localStorage.getItem("token");
-                    fetch(endpointBE + `/cart-items/${props.cartItem.idCart}`, {
+                    fetch(endpointFE + `/cart-items/${props.cartItem.idCart}`, {
                         method: "DELETE",
                         headers: {
                             Authorization: `Bearer ${token}`,
@@ -131,7 +131,7 @@ const PlasticCartProps: React.FC<PlasticCartProps> = (props) => {
             // Cập nhật trong db
             if (isToken()) {
                 const token = localStorage.getItem("token");
-                fetch(endpointBE + `/cart-item/update-item`, {
+                fetch(endpointFE + `/cart-item/update-item`, {
                     method: "PUT",
                     headers: {
                         Authorization: `Bearer ${token}`,

@@ -8,7 +8,7 @@ import { toast } from "react-toastify";
 import { useConfirm } from "material-ui-confirm";
 
 import GenreModel from "../../../../models/GenreModel";
-import {endpointBE} from "../../../utils/Constant";
+import {endpointBE, endpointFE} from "../../../utils/Constant";
 import {DataTable} from "../../../utils/DataTable";
 import {getAllGenres} from "../../../../api/GenresApi";
 
@@ -49,7 +49,7 @@ export const GenreTable: React.FC<GenreTableProps> = (props) => {
 			cancellationText: ["Huỷ"],
 		})
 			.then(() => {
-				fetch(endpointBE + `/genres/${idGenre}`, {
+				fetch(endpointFE + `/genres/${idGenre}`, {
 					method: "DELETE",
 					headers: {
 						Authorization: `Bearer ${token}`,

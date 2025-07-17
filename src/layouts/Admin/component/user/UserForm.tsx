@@ -25,7 +25,7 @@ import RoleModel from "../../../../models/RoleModel";
 import {getAllRoles} from "../../../../api/RoleApi";
 import {get1User} from "../../../../api/UserApi";
 import {getUsernameByToken} from "../../../utils/JwtService";
-import {endpointBE} from "../../../utils/Constant";
+import {endpointBE, endpointFE} from "../../../utils/Constant";
 
 
 interface UserFormProps {
@@ -98,8 +98,8 @@ export const UserForm: React.FC<UserFormProps> = (props) => {
 
 		const endpoint =
 			props.option === "add"
-				? endpointBE + "/taikhoan/add-user"
-				: endpointBE + "/taikhoan/update-user";
+				? endpointFE + "/taikhoan/add-user"
+				: endpointFE + "/taikhoan/update-user";
 		const method = props.option === "add" ? "POST" : "PUT";
 		toast.promise(
 			fetch(endpoint, {

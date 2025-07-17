@@ -11,7 +11,7 @@ import {
 import { toast } from "react-toastify";
 import {get1Orders} from "../../../../api/OrderApi";
 import OrderModel from "../../../../models/OrderModel";
-import {endpointBE} from "../../../utils/Constant";
+import {endpointBE, endpointFE} from "../../../utils/Constant";
 
 import CartItemModel from "../../../../models/CartItemModel";
 import {OrderDetail} from "../../../product/componetns/order-detail/OrderDetail";
@@ -68,7 +68,7 @@ export const OrderForm: React.FC<OrderFormProps> = (props) => {
 
 		const token = localStorage.getItem("token");
 
-		fetch(endpointBE + "/order/update-order", {
+		fetch(endpointFE + "/order/update-order", {
 			method: "PUT",
 			headers: {
 				Authorization: `Bearer ${token}`,
@@ -94,7 +94,7 @@ export const OrderForm: React.FC<OrderFormProps> = (props) => {
 	const handleCancleOrder = () => {
 		const token = localStorage.getItem("token");
 
-		fetch(endpointBE + "/order/update-order", {
+		fetch(endpointFE + "/order/update-order", {
 			method: "PUT",
 			headers: {
 				Authorization: `Bearer ${token}`,

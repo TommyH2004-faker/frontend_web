@@ -10,7 +10,7 @@ import "react-toastify/dist/ReactToastify.css";
 import GenreModel from "../../../../models/GenreModel";
 
 import {isTokenExpired} from "../../../utils/JwtService";
-import {endpointBE} from "../../../utils/Constant";
+import {endpointBE, endpointFE} from "../../../utils/Constant";
 import {get1Genre} from "../../../../api/GenresApi";
 
 
@@ -56,8 +56,8 @@ export const GenreForm: React.FC<GenreFormProps> = (props) => {
 		const method = props.option === "add" ? "POST" : "PUT";
 		const endpoint =
 			props.option === "add"
-				? endpointBE + "/genres"
-				: endpointBE + `/genres/${props.id}`;
+				? endpointFE + "/genres"
+				: endpointFE + `/genres/${props.id}`;
 
 		fetch(endpoint, {
 			method: method,

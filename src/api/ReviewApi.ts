@@ -1,5 +1,5 @@
 
-import { endpointBE } from "../layouts/utils/Constant";
+import {endpointBE, endpointFE} from "../layouts/utils/Constant";
 import { my_request, requestAdmin } from "./Request";
 import ReviewModel from "../models/ReviewModel";
 
@@ -14,13 +14,13 @@ async function getReview(endpoint: string): Promise<ReviewModel[]> {
 
 export async function getAllReview(idNhua: number): Promise<ReviewModel[]> {
    // Xác định endpoint
-   const endpoint: string = endpointBE + `/plastic-items/${idNhua}/listReviews`;
+   const endpoint: string = endpointFE + `/plastic-items/${idNhua}/listReviews`;
 
    return getReview(endpoint);
 }
 
 export async function getTotalNumberOfReviews(): Promise<number> {
-   const endpoint = endpointBE + "/reviews/search/countBy";
+   const endpoint = endpointFE + "/reviews/search/countBy";
    try {
       const response = await requestAdmin(endpoint);
       if (response) {

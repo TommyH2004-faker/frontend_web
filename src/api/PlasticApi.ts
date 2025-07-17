@@ -1,6 +1,6 @@
 import PlasticModels from "../models/PlasticModels";
 import {my_request, requestAdmin} from "./Request";
-import {endpointBE} from "../layouts/utils/Constant";
+import {endpointBE, endpointFE} from "../layouts/utils/Constant";
 import {layToanBoHinhAnhMotNhua} from "./ImageApi";
 import plasticList from "../layouts/product/PlasticList";
 import GenreModel from "../models/GenreModel";
@@ -39,23 +39,23 @@ async function  layDanhSachDoNhua(duongDan:string):Promise<KetQuaInterFace> {
 
 }
 export async function getAllPlasticItems(page: number, size: number): Promise<KetQuaInterFace> {
-    const duongDan = `http://localhost:8080/plastic-items?sort=idPlasticItem,desc&page=${page}&size=${size}`;
+    const duongDan = `https://backend-webtommysf.onrender.com/plastic-items?sort=idPlasticItem,desc&page=${page}&size=${size}`;
     return layDanhSachDoNhua(duongDan);
 
 }
 export async function layToanBoDoNhua(trangHienTai:number): Promise<KetQuaInterFace> {
-    const duongDan = `http://localhost:8080/plastic-items?sort=idPlasticItem,desc&size=8&page=${trangHienTai}`;
+    const duongDan = `https://backend-webtommysf.onrender.com/plastic-items?sort=idPlasticItem,desc&size=8&page=${trangHienTai}`;
     return layDanhSachDoNhua(duongDan);
 }
 export async function  timKiemPlastic(tuKhoaTimKiem:string,idGenre:number): Promise<KetQuaInterFace> {
-    let duongDan = "http://localhost:8080/plastic-items?sort=idPlasticItem,,desc&size=8&page=0";
+    let duongDan = "https://backend-webtommysf.onrender.com/plastic-items?sort=idPlasticItem,,desc&size=8&page=0";
     if(tuKhoaTimKiem!== '' && idGenre ==0){
-        duongDan = `http://localhost:8080/plastic-items/search/findByNamePlasticItemContaining?namePlastic=${tuKhoaTimKiem}`;
+        duongDan = `https://backend-webtommysf.onrender.com/plastic-items/search/findByNamePlasticItemContaining?namePlastic=${tuKhoaTimKiem}`;
     }
     else if(tuKhoaTimKiem === '' && idGenre > 0){
-        duongDan = `http://localhost:8080/plastic-items/search/findByListGenres_idGenre?idGenre=${idGenre}`;
+        duongDan = `https://backend-webtommysf.onrender.com/plastic-items/search/findByListGenres_idGenre?idGenre=${idGenre}`;
     }else if(tuKhoaTimKiem !== '' && idGenre > 0){
-        duongDan = `http://localhost:8080/plastic-items/search/findByNamePlasticItemContainingAndListGenres_idGenre?namePlastic=${tuKhoaTimKiem}&idGenre=${idGenre}`;
+        duongDan = `https://backend-webtommysf.onrender.com/plastic-items/search/findByNamePlasticItemContainingAndListGenres_idGenre?namePlastic=${tuKhoaTimKiem}&idGenre=${idGenre}`;
     }
     return layDanhSachDoNhua(duongDan);
 }
@@ -69,7 +69,7 @@ export async function searchPlasticItems(idGenre?: number, keySearch?: string, f
     const optionsShow = `size=${size}&page=${page}`;
 
     // Tạo endpoint mặc định
-    let endpoint: string = endpointBE + `/plastic-items?` + optionsShow;
+    let endpoint: string = endpointFE + `/plastic-items?` + optionsShow;
 
     // Xử lý filter
     let filterEndpoint = '';
@@ -88,7 +88,7 @@ export async function searchPlasticItems(idGenre?: number, keySearch?: string, f
     // Nếu có key search và không có lọc thể loại
     if (keySearch !== '') {
         // Mặc đinh nếu không có filter
-        endpoint = endpointBE + `/plastic-items/search/findByNamePlasticItemContaining?namePlastic=${keySearch}&` + optionsShow + '&' + filterEndpoint;
+        endpoint = endpointFE + `/plastic-items/search/findByNamePlasticItemContaining?namePlastic=${keySearch}&` + optionsShow + '&' + filterEndpoint;
     }
 
     // Nếu idGenre không undifined
@@ -96,17 +96,17 @@ export async function searchPlasticItems(idGenre?: number, keySearch?: string, f
         // Nếu có không có key search và có lọc thể loại
         if (keySearch === '' && idGenre > 0) {
             // Mặc định nếu không có filter
-            endpoint = endpointBE + `/plastic-items/search/findByListGenres_IdGenre?idGenre=${idGenre}&` + optionsShow + '&' + filterEndpoint;
+            endpoint = endpointFE + `/plastic-items/search/findByListGenres_IdGenre?idGenre=${idGenre}&` + optionsShow + '&' + filterEndpoint;
         }
 
         // Nếu có key search và có lọc thể loại
         if (keySearch !== '' && idGenre > 0) {
-            endpoint = endpointBE + `/plastic-items/search/findByNamePlasticItemContainingAndListGenres_IdGenre?namePlastic=${keySearch}&idGenre=${idGenre}&` + optionsShow + '&' + filterEndpoint;
+            endpoint = endpointFE + `/plastic-items/search/findByNamePlasticItemContainingAndListGenres_IdGenre?namePlastic=${keySearch}&idGenre=${idGenre}&` + optionsShow + '&' + filterEndpoint;
         }
 
         // Chỉ lọc filter
         if (keySearch === '' && (idGenre === 0 || typeof (idGenre) === 'string')) {
-            endpoint = endpointBE + "/plastic-items?" + optionsShow + '&' + filterEndpoint;
+            endpoint = endpointFE + "/plastic-items?" + optionsShow + '&' + filterEndpoint;
         }
 
         // console.log("idGenre: " + typeof (idGenre) + idGenre + ", filter: " + typeof (filter) + filter + ", keySearch" + +typeof (keySearch) + keySearch);
@@ -167,11 +167,11 @@ export async function searchPlasticItems(idGenre?: number, keySearch?: string, f
 
 
 export async function get3DoNhuaMoiNhat(): Promise<KetQuaInterFace> {
-    const duongDan = "http://localhost:8080/plastic-items?sort=idPlasticItem,desc&page=0&size=3";
+    const duongDan = "https://backend-webtommysf.onrender.com/plastic-items?sort=idPlasticItem,desc&page=0&size=3";
     return layDanhSachDoNhua(duongDan);
 }
 export async function layPlasticbyId(idPlastic: number): Promise<PlasticModels | null> {
-    const duongDan = `http://localhost:8080/plastic-items/${idPlastic}`;
+    const duongDan = `https://backend-webtommysf.onrender.com/plastic-items/${idPlastic}`;
 
     try {
         const response = await fetch(duongDan);
@@ -205,7 +205,7 @@ export async function layPlasticbyId(idPlastic: number): Promise<PlasticModels |
     }
 }
 export async function getPlasticByIdCartItem(idCart:number):Promise<PlasticModels |null >{
-    const endpoint = endpointBE + `/cart-items/${idCart}/plasticItem`;
+    const endpoint = endpointFE + `/cart-items/${idCart}/plasticItem`;
     try{
         const response = await my_request(endpoint);
 
@@ -236,7 +236,7 @@ export async function getPlasticById(idPlastic: number): Promise<PlasticModels |
         discountPercent: NaN,
         thumbnail: "",
     }
-    const endpoint = endpointBE + `/plastic-items/${idPlastic}`;
+    const endpoint = endpointFE + `/plastic-items/${idPlastic}`;
     try {
         // Gọi phương thức request()
         const response = await my_request(endpoint);
@@ -262,7 +262,7 @@ export async function getPlasticById(idPlastic: number): Promise<PlasticModels |
 }
 
 export  async function get3BestSeller():Promise<PlasticModels[]>{
-    const endpoint = endpointBE +"/plastic-items?sort=soldQuantity,desc&page=0&size=3";
+    const endpoint = endpointFE +"/plastic-items?sort=soldQuantity,desc&page=0&size=3";
     let plasticList = await layDanhSachDoNhua(endpoint);
 
     let newPlastic =await Promise.all(plasticList.ketQua.map(async (plastics:any)=>{
@@ -332,7 +332,7 @@ export async function getPlasticByIdAllInformation(idPlastic: number): Promise<P
     }
 }
 export async function getTotalOfPlastic():Promise<number>{
-    const endpoint = "http://localhost:8080/plastic/get-total";
+    const endpoint = "https://backend-webtommysf.onrender.com/plastic/get-total";
     try {
         // Gọi phương thức request()
         const response = await requestAdmin(endpoint);

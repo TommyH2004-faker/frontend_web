@@ -7,7 +7,7 @@ import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { useConfirm } from "material-ui-confirm";
 
-import {endpointBE} from "../../../utils/Constant";
+import {endpointBE, endpointFE} from "../../../utils/Constant";
 import {DataTable} from "../../../utils/DataTable";
 import PlasticModels from "../../../../models/PlasticModels";
 import {getAllPlasticItems, layToanBoDoNhua} from "../../../../api/PlasticApi";
@@ -70,7 +70,7 @@ export const PlasticTable: React.FC<PlasticTableProps> = (props) => {
 			cancellationText: ["Huỷ"],
 		})
 			.then(() => {
-				fetch(endpointBE + `/plastic-items/${id}`, {
+				fetch(endpointFE + `/plastic-items/${id}`, {
 					method: "DELETE",
 					headers: {
 						Authorization: `Bearer ${token}`,

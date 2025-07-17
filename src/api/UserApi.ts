@@ -1,4 +1,4 @@
-import { endpointBE } from "../layouts/utils/Constant";
+import {endpointBE, endpointFE} from "../layouts/utils/Constant";
 
 import { getRoleByIdUser } from "./RoleApi";
 import UserModel from "../models/UserModel";
@@ -13,7 +13,7 @@ async function getUser(endpoint: string): Promise<UserModel> {
 
 
 export async function getAllUserRole(): Promise<UserModel[]> {
-   const endpoint: string = endpointBE + `/role`;
+   const endpoint: string = endpointFE + `/role`;
 
 
    const response = await requestAdmin(endpoint);
@@ -65,7 +65,7 @@ export async function getAllUserRole(): Promise<UserModel[]> {
 
 
 export async function get1User(idUser: any): Promise<UserModel> {
-   const endpoint = endpointBE + `/users/${idUser}`;
+   const endpoint = endpointFE + `/users/${idUser}`;
    const responseUser = await my_request(endpoint);
    const responseRole = await getRoleByIdUser(idUser);
 
@@ -89,7 +89,7 @@ export async function get1User(idUser: any): Promise<UserModel> {
 
 export async function getUserByIdReview(idReview: number): Promise<UserModel> {
    // Xác định endpoint
-   const endpoint: string = endpointBE + `/reviews/${idReview}/user`;
+   const endpoint: string = endpointFE + `/reviews/${idReview}/user`;
 
    return getUser(endpoint);
 }

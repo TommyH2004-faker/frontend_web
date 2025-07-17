@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 import useScrollToTop from "../../hooks/ScrollToTop";
 import FeedbackModel from "../../models/FeedbackModel";
 import {useAuth} from "../../layouts/utils/AuthContext";
-import {endpointBE} from "../../layouts/utils/Constant";
+import {endpointBE, endpointFE} from "../../layouts/utils/Constant";
 
 export const FeedbackCustomerPage: React.FC = () => {
 	useScrollToTop(); // Mỗi lần vào component này thì sẽ ở trên cùng
@@ -36,7 +36,7 @@ export const FeedbackCustomerPage: React.FC = () => {
 		const token = localStorage.getItem("token");
 
 		toast.promise(
-			fetch(endpointBE + "/feedback/add-feedback", {
+			fetch(endpointFE + "/feedback/add-feedback", {
 				method: "POST",
 				headers: {
 					Authorization: `Bearer ${token}`,

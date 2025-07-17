@@ -34,7 +34,7 @@ import {useAuth} from "../layouts/utils/AuthContext";
 import UserModel from "../models/UserModel";
 import {get1User} from "../api/UserApi";
 import {getIdUserByToken} from "../layouts/utils/JwtService";
-import {endpointBE} from "../layouts/utils/Constant";
+import {endpointBE, endpointFE} from "../layouts/utils/Constant";
 import HiddenInputUpload from "../layouts/utils/HiddenInputUpload";
 import {checkPassword, checkPhoneNumber, checkRepeatPassword} from "../layouts/utils/Validation";
 
@@ -181,7 +181,7 @@ const ProfilePage: React.FC<ProfilePageProps> = (props) => {
 		event.preventDefault();
 		const token = localStorage.getItem("token");
 		toast.promise(
-			fetch(endpointBE + `/taikhoan/update-profile`, {
+			fetch(endpointFE + `/taikhoan/update-profile`, {
 				method: "PUT",
 				headers: {
 					Authorization: `Bearer ${token}`,
@@ -252,7 +252,7 @@ const ProfilePage: React.FC<ProfilePageProps> = (props) => {
 		const token = localStorage.getItem("token");
 
 		toast.promise(
-			fetch(endpointBE + "/taikhoan/change-avatar", {
+			fetch(endpointFE + "/taikhoan/change-avatar", {
 				method: "PUT",
 				headers: {
 					Authorization: `Bearer ${token}`,
@@ -307,7 +307,7 @@ const ProfilePage: React.FC<ProfilePageProps> = (props) => {
 		}
 
 		const token = localStorage.getItem("token");
-		fetch(endpointBE + "/taikhoan/change-password", {
+		fetch(endpointFE + "/taikhoan/change-password", {
 			method: "PUT",
 			headers: {
 				Authorization: `Bearer ${token}`,

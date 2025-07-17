@@ -1,4 +1,4 @@
-import { endpointBE } from "../layouts/utils/Constant";
+import {endpointBE, endpointFE} from "../layouts/utils/Constant";
 import {my_request} from "./Request";
 import OrderModel from "../models/OrderModel";
 import CartItemModel from "../models/CartItemModel";
@@ -7,11 +7,11 @@ import CartItemModel from "../models/CartItemModel";
 
 export async function getAllOrders(): Promise<OrderModel[]> {
     try {
-        const endpoint: string = endpointBE + "/orders?sort=idOrder,desc&size=100000";
+        const endpoint: string = endpointFE + "/orders?sort=idOrder,desc&size=100000";
         const response = await my_request(endpoint);
 
         const datas = await Promise.all(response._embedded.orders.map(async (data: any) => {
-            const responsePayment = await  my_request(endpointBE + `/orders/${data.idOrder}/payment`);
+            const responsePayment = await  my_request(endpointFE + `/orders/${data.idOrder}/payment`);
             return {
                 idOrder: data.idOrder,
                 deliveryAddress: data.deliveryAddress,
@@ -37,12 +37,12 @@ export async function getAllOrders(): Promise<OrderModel[]> {
 
 
 export async function getAllOrdersByIdUser(idUser: number): Promise<OrderModel[]> {
-    const endpoint = endpointBE + `/users/${idUser}/listOrders?sort=idOrder,desc`;
+    const endpoint = endpointFE + `/users/${idUser}/listOrders?sort=idOrder,desc`;
     const response = await  my_request(endpoint);
     console.log(response);
     const datas = await Promise.all(response._embedded.
     orders.map(async (data: any) => {
-        const responsePayment = await  my_request(endpointBE + `/orders/${data.idOrder}/payment`);
+        const responsePayment = await  my_request(endpointFE + `/orders/${data.idOrder}/payment`);
         const order: OrderModel = {
             idOrder: data.idOrder,
             deliveryAddress: data.deliveryAddress,
@@ -64,15 +64,15 @@ export async function getAllOrdersByIdUser(idUser: number): Promise<OrderModel[]
 }
 
 export async function get1Orders(idOrder: number): Promise<OrderModel> {
-    const endpoint: string = endpointBE + `/orders/${idOrder}`;
+    const endpoint: string = endpointFE + `/orders/${idOrder}`;
     const responseOrder = await  my_request(endpoint);
-    const responsePayment = await  my_request(endpointBE + `/orders/${responseOrder.idOrder}/payment`);
-    const responseOrderDetail = await  my_request(endpointBE + `/orders/${responseOrder.idOrder}/listOrderDetails`);
+    const responsePayment = await  my_request(endpointFE + `/orders/${responseOrder.idOrder}/payment`);
+    const responseOrderDetail = await  my_request(endpointFE + `/orders/${responseOrder.idOrder}/listOrderDetails`);
     let cartItems: CartItemModel[] = [];
 
     // Sử dụng Promise.all để chờ tất cả các promise hoàn thành
     await Promise.all(responseOrderDetail._embedded.orderDetails.map(async (orderDetail: any) => {
-        const responsePlastic = await  my_request(endpointBE + `/order-details/${orderDetail.idOrderDetail}/plasticItem`);
+        const responsePlastic = await  my_request(endpointFE + `/order-details/${orderDetail.idOrderDetail}/plasticItem`);
         cartItems.push({ plasticItem: responsePlastic, quantity: orderDetail.quantity, review: orderDetail.review });
     }));
 

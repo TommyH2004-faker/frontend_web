@@ -12,7 +12,7 @@ import ReactSimpleImageViewer from "react-simple-image-viewer";
 import React from "react";
 
 import { toast } from "react-toastify";
-import { endpointBE } from "../utils/Constant";
+import {endpointBE, endpointFE} from "../utils/Constant";
 import { getIdUserByToken, isToken } from "../utils/JwtService";
 
 import { Skeleton } from "@mui/material";
@@ -202,7 +202,7 @@ const ChiTietNhua: React.FC<PlasticDetailProps> = (props) => {
                     quantity: isExistPlastic.quantity,
                 };
                 const token = localStorage.getItem("token");
-                fetch(endpointBE + `/cart-item/update-item`, {
+                fetch(endpointFE + `/cart-item/update-item`, {
                     method: "PUT",
                     headers: {
                         Authorization: `Bearer ${token}`,
@@ -231,7 +231,7 @@ const ChiTietNhua: React.FC<PlasticDetailProps> = (props) => {
                     console.log("Dữ liệu gửi lên: ", request);
 
                     const token = localStorage.getItem("token");
-                    const response = await fetch(endpointBE + "/cart-item/add-item", {
+                    const response = await fetch(endpointFE + "/cart-item/add-item", {
                         method: "POST",
                         headers: {
                             Authorization: `Bearer ${token}`,

@@ -4,7 +4,7 @@ import {useAuth} from "../../utils/AuthContext";
 import {useNavigate} from "react-router-dom";
 import Button from "@mui/material/Button";
 import {toast} from "react-toastify";
-import {endpointBE} from "../../utils/Constant";
+import {endpointBE, endpointFE} from "../../utils/Constant";
 import {TextField} from "@mui/material";
 
 
@@ -23,7 +23,7 @@ export const ForgotPassword: React.FC = () => {
     function handleSubmit(event: FormEvent<HTMLFormElement>): void {
         event.preventDefault();
         toast.promise(
-            fetch(endpointBE + "/taikhoan/forgot-password", {
+            fetch(endpointFE + "/taikhoan/forgot-password", {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",

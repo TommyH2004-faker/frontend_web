@@ -13,7 +13,7 @@ import React, { useEffect, useState } from "react";
 import { useConfirm } from "material-ui-confirm";
 import { toast } from "react-toastify";
 import UserModel from "../../../../models/UserModel";
-import {endpointBE} from "../../../utils/Constant";
+import {endpointBE, endpointFE} from "../../../utils/Constant";
 import {getAllUserRole} from "../../../../api/UserApi";
 import {DataTable} from "../../../utils/DataTable";
 
@@ -44,7 +44,7 @@ export const UserTable: React.FC<UserTableProps> = (props) => {
 		})
 			.then(() => {
 				toast.promise(
-					fetch(endpointBE + `/user/delete-user/${idUser}`, {
+					fetch(endpointFE + `/user/delete-user/${idUser}`, {
 						method: "DELETE",
 						headers: {
 							Authorization: `Bearer ${token}`,

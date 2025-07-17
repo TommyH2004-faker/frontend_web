@@ -2,7 +2,7 @@ import { Button, TextField } from "@mui/material";
 import { jwtDecode } from "jwt-decode";
 import React, { FormEvent, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { endpointBE } from "../utils/Constant";
+import {endpointBE, endpointFE} from "../utils/Constant";
 import { useAuth } from "../utils/AuthContext";
 
 import useScrollToTop from "../../hooks/ScrollToTop";
@@ -40,7 +40,7 @@ const DangNhap: React.FC<LoginPageProps> = (props) => {
             password,
         };
 
-        fetch(endpointBE + "/taikhoan/authenticate", {
+        fetch(endpointFE + "/taikhoan/authenticate", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -84,7 +84,7 @@ const DangNhap: React.FC<LoginPageProps> = (props) => {
                         plastic: c.plasticItem,
                         quantity: c.quantity,
                     }));
-                    const endpoint = endpointBE + "/cart-item/add-item";
+                    const endpoint = endpointFE + "/cart-item/add-item";
                     fetch(endpoint, {
                         method: "POST",
                         headers: {

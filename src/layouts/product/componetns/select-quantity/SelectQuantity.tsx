@@ -6,7 +6,7 @@ import "./SelectQuantity.css";
 import Icon from "@mui/material/Icon";
 
 import { isToken } from "../../../utils/JwtService";
-import { endpointBE } from "../../../utils/Constant";
+import {endpointBE, endpointFE} from "../../../utils/Constant";
 
 import CartItemModel from "../../../../models/CartItemModel";
 import PlasticModels from "../../../../models/PlasticModels";
@@ -44,7 +44,7 @@ const SelectQuantity: React.FC<SelectQuantityProps> = (props) => {
 				// Cập nhật trong db
 				if (isToken()) {
 					const token = localStorage.getItem("token");
-					fetch(endpointBE + `/cart-item/update-item`, {
+					fetch(endpointFE + `/cart-item/update-item`, {
 						method: "PUT",
 						headers: {
 							Authorization: `Bearer ${token}`,

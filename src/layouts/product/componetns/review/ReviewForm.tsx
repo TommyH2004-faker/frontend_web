@@ -1,7 +1,7 @@
 import { Button, TextField, Typography } from "@mui/material";
 import React, { FormEvent, useEffect, useState } from "react";
 
-import { endpointBE } from "../../../utils/Constant";
+import {endpointBE, endpointFE} from "../../../utils/Constant";
 import { toast } from "react-toastify";
 import { getIdUserByToken } from "../../../utils/JwtService";
 import CartItemModel from "../../../../models/CartItemModel";
@@ -42,7 +42,7 @@ export const ReviewForm: React.FC<ReviewFormProps> = (props) => {
 			? "/review/update-review"
 			: "/review/add-review";
 		const method = props.cartItem?.review ? "PUT" : "POST";
-		fetch(endpointBE + endpoint, {
+		fetch(endpointFE + endpoint, {
 			method: method,
 			headers: {
 				Authorization: `Bearer ${token}`,
@@ -75,7 +75,7 @@ export const ReviewForm: React.FC<ReviewFormProps> = (props) => {
 	useEffect(() => {
 		if (props.cartItem?.review) {
 			const token = localStorage.getItem("token");
-			fetch(endpointBE + `/review/get-review`, {
+			fetch(endpointFE + `/review/get-review`, {
 				method: "POST",
 				headers: {
 					Authorization: `Bearer ${token}`,
