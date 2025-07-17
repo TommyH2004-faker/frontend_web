@@ -40,7 +40,7 @@ const DangNhap: React.FC<LoginPageProps> = (props) => {
             password,
         };
 
-        fetch(endpointFE + "/taikhoan/authenticate", {
+        fetch("https://backend-webtommysf.onrender.com/taikhoan/authenticate", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
