@@ -45,6 +45,7 @@ const DangNhap: React.FC<LoginPageProps> = (props) => {
             headers: {
                 "Content-Type": "application/json",
             },
+            credentials: "include",
             body: JSON.stringify(loginRequest),
         })
             .then(async (response) => {
