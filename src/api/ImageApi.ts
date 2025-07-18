@@ -22,11 +22,11 @@ async function  layAnhMotSach(duongDan: string): Promise<ImageModel[]> {
 }
 export async function lay1AnhCuaMotNhua(idPlasticItem:number): Promise<ImageModel[]> {
     // xac dinh endpoint
-    const duongDan: string = endpointFE+`plastic-items/${idPlasticItem}/listImages?sort=idImage,asc?page=0&size=1`;
+    const duongDan: string = endpointFE+`/plastic-items/${idPlasticItem}/listImages?sort=idImage,asc?page=0&size=1`;
     return layAnhMotSach(duongDan);
 }
 export async function layToanBoHinhAnhMotNhua(idPlasticItem: number): Promise<ImageModel[]> {
     // xac dinh endpoint
-    const duongDan: string = endpointFE+`plastic-items/${idPlasticItem}/listImages`;
+    const duongDan: string = endpointFE+`/plastic-items/${idPlasticItem}/listImages`;
     return layAnhMotSach(duongDan);
 }
