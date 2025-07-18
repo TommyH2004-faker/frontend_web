@@ -92,6 +92,7 @@ const DangNhap: React.FC<LoginPageProps> = (props) => {
                             Authorization: `Bearer ${jwt}`,
                             "content-type": "application/json",
                         },
+                        credentials: "include",
                         body: JSON.stringify(cartTo),
                     })
                         .then((response) => {
