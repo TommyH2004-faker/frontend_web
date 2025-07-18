@@ -6,7 +6,7 @@ import {endpointBE, endpointFE} from "../layouts/utils/Constant";
 // getTotalNumberOfFeedbacks
 export async function getTotalNumberOfFeedbacks(): Promise<number> {
     // Xác định endpoint
-    const duongDan: string = `https://backend-website-j4f1.onrender.com/feedback/totalFeedbacks`;
+    const duongDan: string = endpointFE +`feedback/totalFeedbacks`;
     // Gọi phương thức request
     const response = await my_request(duongDan);
     return response;
@@ -86,12 +86,12 @@ async function layDanhGiaCuaMotSach(duongDan: string): Promise<ReviewModel[]> {
 
 // Lay toan bo danh gia cua mot sach
 export async function layToanBoDanhGiaCuaMotPlastic(maNhua: number): Promise<ReviewModel[]> {
-    const duongDan: string = `https://backend-website-j4f1.onrender.com/plastic-items/${maNhua}/listReviews`;
+    const duongDan: string = endpointFE+`plastic-items/${maNhua}/listReviews`;
     return layDanhGiaCuaMotSach(duongDan);
 }
 
 // Lay 1 danh gia cua mot sach
 export async function lay1DanhGiaCuaMotPlastic(maNhua: number): Promise<ReviewModel[]> {
-    const duongDan: string = `https://backend-website-j4f1.onrender.com/plastic-items/${maNhua}/listReviews?sort=idReview,asc&page=0&size=1`;
+    const duongDan: string = endpointFE+`plastic-items/${maNhua}/listReviews?sort=idReview,asc&page=0&size=1`;
     return layDanhGiaCuaMotSach(duongDan);
 }

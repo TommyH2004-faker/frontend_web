@@ -39,23 +39,23 @@ async function  layDanhSachDoNhua(duongDan:string):Promise<KetQuaInterFace> {
 
 }
 export async function getAllPlasticItems(page: number, size: number): Promise<KetQuaInterFace> {
-    const duongDan = `https://backend-website-j4f1.onrender.com/plastic-items?sort=idPlasticItem,desc&page=${page}&size=${size}`;
+    const duongDan = endpointFE+`plastic-items?sort=idPlasticItem,desc&page=${page}&size=${size}`;
     return layDanhSachDoNhua(duongDan);
 
 }
 export async function layToanBoDoNhua(trangHienTai:number): Promise<KetQuaInterFace> {
-    const duongDan = `https://backend-website-j4f1.onrender.com/plastic-items?sort=idPlasticItem,desc&size=8&page=${trangHienTai}`;
+    const duongDan = endpointFE+`plastic-items?sort=idPlasticItem,desc&size=8&page=${trangHienTai}`;
     return layDanhSachDoNhua(duongDan);
 }
 export async function  timKiemPlastic(tuKhoaTimKiem:string,idGenre:number): Promise<KetQuaInterFace> {
-    let duongDan = "https://backend-website-j4f1.onrender.com/plastic-items?sort=idPlasticItem,,desc&size=8&page=0";
+    let duongDan = endpointFE+"plastic-items?sort=idPlasticItem,,desc&size=8&page=0";
     if(tuKhoaTimKiem!== '' && idGenre ==0){
-        duongDan = `https://backend-website-j4f1.onrender.com/plastic-items/search/findByNamePlasticItemContaining?namePlastic=${tuKhoaTimKiem}`;
+        duongDan = endpointFE+`plastic-items/search/findByNamePlasticItemContaining?namePlastic=${tuKhoaTimKiem}`;
     }
     else if(tuKhoaTimKiem === '' && idGenre > 0){
-        duongDan = `https://backend-website-j4f1.onrender.com/plastic-items/search/findByListGenres_idGenre?idGenre=${idGenre}`;
+        duongDan = endpointFE+`plastic-items/search/findByListGenres_idGenre?idGenre=${idGenre}`;
     }else if(tuKhoaTimKiem !== '' && idGenre > 0){
-        duongDan = `https://backend-website-j4f1.onrender.com/plastic-items/search/findByNamePlasticItemContainingAndListGenres_idGenre?namePlastic=${tuKhoaTimKiem}&idGenre=${idGenre}`;
+        duongDan = endpointFE+`plastic-items/search/findByNamePlasticItemContainingAndListGenres_idGenre?namePlastic=${tuKhoaTimKiem}&idGenre=${idGenre}`;
     }
     return layDanhSachDoNhua(duongDan);
 }
@@ -167,11 +167,11 @@ export async function searchPlasticItems(idGenre?: number, keySearch?: string, f
 
 
 export async function get3DoNhuaMoiNhat(): Promise<KetQuaInterFace> {
-    const duongDan = "https://backend-website-j4f1.onrender.com/plastic-items?sort=idPlasticItem,desc&page=0&size=3";
+    const duongDan = endpointFE+"plastic-items?sort=idPlasticItem,desc&page=0&size=3";
     return layDanhSachDoNhua(duongDan);
 }
 export async function layPlasticbyId(idPlastic: number): Promise<PlasticModels | null> {
-    const duongDan = `https://backend-website-j4f1.onrender.com/plastic-items/${idPlastic}`;
+    const duongDan = endpointFE+`plastic-items/${idPlastic}`;
 
     try {
         const response = await fetch(duongDan);
@@ -332,7 +332,7 @@ export async function getPlasticByIdAllInformation(idPlastic: number): Promise<P
     }
 }
 export async function getTotalOfPlastic():Promise<number>{
-    const endpoint = "https://backend-website-j4f1.onrender.com/plastic/get-total";
+    const endpoint = endpointFE+"plastic/get-total";
     try {
         // Gọi phương thức request()
         const response = await requestAdmin(endpoint);
