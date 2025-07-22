@@ -241,10 +241,11 @@ function Navbar({tuKhoaTimKiem,setTuKhoaTimKiem}:NavbarProps) {
 export default Navbar;*/
 import { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { useCartItem } from "../context/CartContext";
-import { useAuth } from "../context/AuthContext";
-import { getAllGenres } from "../api/GenreAPI";
-import { GenreModel } from "../model/GenreModel";
+import {useCartItem} from "../../models/CartItemContext";
+import {useAuth} from "../utils/AuthContext";
+import GenreModel from "../../models/GenreModel";
+import {getAllGenres} from "../../api/GenresApi";
+
 
 interface NavbarProps {
     tuKhoaTimKiem: string;
