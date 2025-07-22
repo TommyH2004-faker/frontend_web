@@ -1,4 +1,3 @@
-/*
 import React, {useEffect} from "react";
 import { useState } from "react";
 import {Link, NavLink, useLocation, useNavigate} from "react-router-dom";
@@ -103,7 +102,7 @@ function Navbar({tuKhoaTimKiem,setTuKhoaTimKiem}:NavbarProps) {
                     </ul>
                 </div>
 
-                {/!* Tìm kiếm *!/}
+                {/* Tìm kiếm */}
                 <div className="d-flex">
                     <input className="form-control me-2" type="search" placeholder="Tìm kiếm" aria-label="Search"
                            onChange={onsearchInputChange} value={tuKhoaTamThoi}/>
@@ -112,7 +111,7 @@ function Navbar({tuKhoaTimKiem,setTuKhoaTimKiem}:NavbarProps) {
                     </button>
                 </div>
 
-                {/!* Biểu tượng giỏ hàng *!/}
+                {/* Biểu tượng giỏ hàng */}
                 <ul className="navbar-nav me-1">
                     <li className="nav-item">
                         <Link className="nav-link" to="/cart">
@@ -122,7 +121,7 @@ function Navbar({tuKhoaTimKiem,setTuKhoaTimKiem}:NavbarProps) {
                     </li>
                 </ul>
 
-                {/!* Biểu tượng đăng nhập *!/}
+                {/* Biểu tượng đăng nhập */}
                 {!isToken() && (
                     <div>
                         <Link to={"/dangnhap"}>
@@ -135,7 +134,7 @@ function Navbar({tuKhoaTimKiem,setTuKhoaTimKiem}:NavbarProps) {
                 )}
                 {isToken() && (
                     <>
-                        {/!* <!-- Notifications --> *!/}
+                        {/* <!-- Notifications --> */}
                         <div className='dropdown'>
                             <a
                                 className='text-reset me-3 dropdown-toggle hidden-arrow'
@@ -171,7 +170,7 @@ function Navbar({tuKhoaTimKiem,setTuKhoaTimKiem}:NavbarProps) {
                                 </li>
                             </ul>
                         </div>
-                        {/!* <!-- Avatar --> *!/}
+                        {/* <!-- Avatar --> */}
                         <div className='dropdown'>
                             <a
                                 className='dropdown-toggle d-flex align-items-center hidden-arrow'
@@ -238,101 +237,4 @@ function Navbar({tuKhoaTimKiem,setTuKhoaTimKiem}:NavbarProps) {
     );
 }
 
-export default Navbar;*/
-import { useEffect, useState } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
-import {useCartItem} from "../../models/CartItemContext";
-import {useAuth} from "../utils/AuthContext";
-import GenreModel from "../../models/GenreModel";
-import {getAllGenres} from "../../api/GenresApi";
-
-
-interface NavbarProps {
-    tuKhoaTimKiem: string;
-    setTuKhoaTimKiem: (tuKhoa: string) => void;
-}
-
-function Navbar({ tuKhoaTimKiem, setTuKhoaTimKiem }: NavbarProps) {
-    const [tuKhoaTamThoi, setTuKhoaTamThoi] = useState("");
-    const { totalCart } = useCartItem();
-    const { setLoggedIn } = useAuth();
-    const [genreList, setGenreList] = useState<GenreModel[]>([]);
-    const navigate = useNavigate();
-    const location = useLocation();
-    const [erroring, setErroring] = useState<string | null>(null);
-
-    // ✅ Hook phải được gọi luôn, không điều kiện
-    useEffect(() => {
-        getAllGenres()
-            .then((response) => {
-                setGenreList(response.genreList);
-            })
-            .catch((error) => {
-                setErroring(error.message);
-            });
-    }, []);
-
-    const onSearchInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setTuKhoaTamThoi(event.target.value);
-    };
-
-    const handleSearch = () => {
-        setTuKhoaTimKiem(tuKhoaTamThoi);
-    };
-
-    // ✅ Chỉ kiểm tra điều kiện render tại đây
-    const adminEndpoint = ["/admin"];
-    const isAdminPage = adminEndpoint.includes(location.pathname);
-
-    if (isAdminPage) return null;
-
-    return (
-        <nav className="navbar navbar-expand-lg navbar-light bg-light px-3">
-            <a className="navbar-brand" href="/">BookStore</a>
-            <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown">
-                <span className="navbar-toggler-icon"></span>
-            </button>
-
-            <div className="collapse navbar-collapse" id="navbarNavDropdown">
-                <ul className="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li className="nav-item">
-                        <a className="nav-link active" href="/">Trang chủ</a>
-                    </li>
-                    <li className="nav-item dropdown">
-                        <a className="nav-link dropdown-toggle" href="#" id="genreDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            Thể loại
-                        </a>
-                        <ul className="dropdown-menu" aria-labelledby="genreDropdown">
-                            {genreList.map((genre) => (
-                                <li key={genre.idGenre}>
-                                    <a className="dropdown-item" href={`/genres/${genre.idGenre}`}>{genre.nameGenre}</a>
-                                </li>
-                            ))}
-                        </ul>
-                    </li>
-                </ul>
-
-                <form className="d-flex" onSubmit={(e) => { e.preventDefault(); handleSearch(); }}>
-                    <input
-                        className="form-control me-2"
-                        type="search"
-                        placeholder="Tìm kiếm sách..."
-                        aria-label="Search"
-                        value={tuKhoaTamThoi}
-                        onChange={onSearchInputChange}
-                    />
-                    <button className="btn btn-outline-success" type="submit">Tìm</button>
-                </form>
-
-                <ul className="navbar-nav ms-3">
-                    <li className="nav-item">
-                        <a className="nav-link" href="/cart">Giỏ hàng ({totalCart})</a>
-                    </li>
-                </ul>
-            </div>
-        </nav>
-    );
-}
-
 export default Navbar;
-
